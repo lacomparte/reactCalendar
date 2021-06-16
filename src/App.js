@@ -1,10 +1,10 @@
 import React from "react";
-import Calendar from "./components/Calendar";
+import Routes from "./Routes";
 
 function App() {
   return (
     <div className="App">
-      <Calendar />
+      <Routes />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 // https://jerryjerryjerry.tistory.com/26
 // https://bigtop.tistory.com/64?category=827794
 import React, { useEffect, useState } from "react";
-import styled, { createGlobalStyle } from "styled-components";
-import GenerateMonth from './GenerateMonth';
+import styled from "styled-components";
+import GenerateMonth from "../components/GenerateMonth";
+import CalendarType from "../components/CalendarType";
 
 const Header = styled.header`
   display: flex;
@@ -39,49 +40,44 @@ const Calendar = () => {
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth() + 1);
 
-  const convertUnixToDate = (unix) => {
-    console.log(unix);
-    return new Date(unix)
-  };
-  console.log('viewDate = ',viewDate);
-
   useEffect(() => {
-    setViewYear(
-      viewDate.getFullYear()
-    );
-    setViewMonth(
-      viewDate.getMonth() + 1
-    );
+    setViewYear(new Date(viewDate).getFullYear());
+    setViewMonth(new Date(viewDate).getMonth() + 1);
   }, [viewDate]);
 
+  const changeDate = (date, isNext) => {
+    const dateObject = new Date(`${date}`);
+    const currentMonth = new Date(dateObject).getMonth();
+    const changeMonth = isNext
+      ? new Date(dateObject).setMonth(currentMonth + 1)
+      : new Date(dateObject).setMonth(currentMonth - 1);
+
+    return new Date(changeMonth);
+  };
+
   const handleClickCalendar = (e) => {
-    const isNext = e.target.ariaLabel.includes('다음달');
+    const isNext = e.target.ariaLabel.includes("다음달");
     const date = new Date(viewDate);
-    setViewDate(
-      isNext
-      ? date.getDate() + 1
-      : date.getDate() - 1
-    );
-  }
+
+    setViewDate(changeDate(date, isNext));
+  };
 
   return (
     <main>
+      <CalendarType />
       <Header>
         <button onClick={(e) => handleClickCalendar(e)} aria-label="이전달">
           &lt;
         </button>
         <h1>
-          {viewDate.toString()}
+          {viewYear}년{viewMonth}월
         </h1>
         <button onClick={(e) => handleClickCalendar(e)} aria-label="다음달">
           &gt;
         </button>
       </Header>
       <CalendarDays />
-      <GenerateMonth
-        year={viewYear}
-        month={viewMonth}
-       />
+      <GenerateMonth year={viewYear} month={viewMonth} />
     </main>
   );
 };

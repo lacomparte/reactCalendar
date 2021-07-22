@@ -6,6 +6,9 @@ const Week = styled.article`
     width: 100%;
     list-style-type: none;
     display: flex;
+    margin: 0;
+    padding: 0;
+    text-align: center;
     li {
       flex: 1 1 calc(100% / 7);
     }

@@ -1,14 +1,14 @@
 const INITIAL_STATE = {
-  calendar: new Date().getMonth() + 1,
+  calendar: new Date(),
 };
 
-const viewCalendar = (state = INITIAL_STATE, actions) => {
+const setCalendar = (state = INITIAL_STATE, actions) => {
   switch (actions.type) {
-    case "VIEW_CALENDAR":
-      return [...state, actions.payload];
+    case "SET_CALENDAR":
+      return { ...actions.payload };
     default:
       return state;
   }
 };
 
-export default viewCalendar;
+export default setCalendar;

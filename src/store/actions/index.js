@@ -1,6 +1,6 @@
-export const viewCalendar = (calendar) => {
+export const setCalendar = (calendar) => {
   return {
-    type: "VIEW_CALENDAR",
+    type: "SET_CALENDAR",
     payload: calendar,
   };
 };

@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { viewCalendar } from "@/store/actions";
 import CalendarType from "@/components/common/CalendarType";
 import CalendarMonth from "@/components/month/CalendarMonth";
 import CalendarWeek from "@/components/week/CalendarWeek";
 
 const ContainerCalendar = () => {
-  const dispatch = useDispatch();
-  const viewCalendar = useSelector((state) => state.calendarReducer);
-
+  const setCalendar = useSelector((state) => state.calendarReducer.calendar);
   const [calendarType, setCalendarType] = useState({
     month: true,
     week: false,
@@ -25,9 +22,9 @@ const ContainerCalendar = () => {
         handleClickCalendarType={handleClickCalendarType}
       />
       {calendarType.month ? (
-        <CalendarMonth viewCalendar={viewCalendar} />
+        <CalendarMonth viewCalendar={setCalendar} />
       ) : (
-        <CalendarWeek viewCalendar={viewCalendar} />
+        <CalendarWeek viewCalendar={setCalendar} />
       )}
     </>
   );

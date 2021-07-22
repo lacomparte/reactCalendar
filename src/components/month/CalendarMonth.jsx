@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import CalendarDays from "@/components/common/CalendarDays";
+import CalendarButton from "@/components/month/CalendarButton";
 import GenerateMonth from "@/components/month/GenerateMonth";
 
 const Calendar = ({ viewCalendar }) => {
-  console.log(viewCalendar);
-  const [viewDate, setViewDate] = useState(new Date());
-  const [viewYear, setViewYear] = useState(new Date().getFullYear());
-  const [viewMonth, setViewMonth] = useState(new Date().getMonth() + 1);
+  const [viewYear, setViewYear] = useState();
+  const [viewMonth, setViewMonth] = useState();
 
   useEffect(() => {
-    setViewYear(new Date(viewDate).getFullYear());
-    setViewMonth(new Date(viewDate).getMonth() + 1);
-  }, [viewDate]);
-
-  const changeDate = (date, isNext) => {
-    const dateObject = new Date(`${date}`);
-    const currentMonth = new Date(dateObject).getMonth();
-    const changeMonth = isNext
-      ? new Date(dateObject).setMonth(currentMonth + 1)
-      : new Date(dateObject).setMonth(currentMonth - 1);
-
-    return new Date(changeMonth);
-  };
+    setViewYear(new Date(`${viewCalendar}`).getFullYear());
+    setViewMonth(new Date(`${viewCalendar}`).getMonth() + 1);
+  }, [viewCalendar]);
 
   return (
     <main>
+      <CalendarButton
+        viewCalendar={viewCalendar}
+        viewYear={viewYear}
+        viewMonth={viewMonth}
+      />
       <CalendarDays />
-      <GenerateMonth year={viewYear} month={viewMonth} />
+      <GenerateMonth setYear={viewYear} setMonth={viewMonth} />
     </main>
   );
 };

@@ -1,12 +1,25 @@
 import React from "react";
+import styled from "styled-components";
 import { getDate } from "@/utils";
 
-const GenerateWeek = ({ year, month }) => {
+const StyledDays = styled.ol`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+
+  li {
+    flex: 1 1 calc(100% / 7);
+  }
+`;
+
+const GenerateWeek = ({ setYear, setMonth }) => {
   // 이번달 첫번째 날짜
-  const currentMonthFirstFullDate = getDate(year, month, 1);
+  const currentMonthFirstFullDate = getDate(setYear, setMonth, 1);
 
   // 이번달 마지막 날짜
-  const currentMonthLastFullDate = getDate(year, month + 1, 0);
+  const currentMonthLastFullDate = getDate(setYear, setMonth + 1, 0);
 
   // 이번달 첫번째 요일
   const currentMonthFirstDay = currentMonthFirstFullDate.getDay();
@@ -18,14 +31,14 @@ const GenerateWeek = ({ year, month }) => {
   // cb: length 만큼 실행할 함수
   const currentMonth = Array.from(
     { length: currentMonthLastFullDate.getDate() },
-    (_, i) => getDate(year, month, i + 1)
+    (_, i) => getDate(setYear, setMonth, i + 1)
   );
 
   /**
    * 이전달 배열 만들기
    **/
   // 이전달 마지막 날짜
-  const prevMonthLastFullDate = getDate(year, month, 0);
+  const prevMonthLastFullDate = getDate(setYear, setMonth, 0);
 
   // 이전달 마지막 날
   const prevMonthLastDate = prevMonthLastFullDate.getDate();
@@ -34,7 +47,7 @@ const GenerateWeek = ({ year, month }) => {
   const prevMonthLastDay = prevMonthLastFullDate.getDay();
 
   const prevMonth = Array.from({ length: currentMonthFirstDay }, (_, i) =>
-    getDate(year, month - 1, prevMonthLastDate - i)
+    getDate(setYear, setMonth - 1, prevMonthLastDate - i)
   ).reverse();
 
   /**
@@ -42,7 +55,7 @@ const GenerateWeek = ({ year, month }) => {
    **/
   const nextMonth = Array.from(
     { length: 7 - (currentMonthLastDay + 1) },
-    (_, i) => getDate(year, month + 1, i + 1)
+    (_, i) => getDate(setYear, setMonth + 1, i + 1)
   );
 
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
@@ -56,30 +69,15 @@ const GenerateWeek = ({ year, month }) => {
   );
 
   return (
-    <>
-      <ol
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          padding: 0,
-          margin: 0,
-          listStyleType: "none",
-        }}
-      >
-        {viewCalendar.flat().map((date) => {
-          return (
-            <li
-              style={{
-                flex: "1 1 calc(100% / 7)",
-              }}
-              key={date}
-            >
-              {new Date(date).getDate()}
-            </li>
-          );
-        })}
-      </ol>
-    </>
+    <StyledDays>
+      {viewCalendar.flat().map((date) => {
+        return (
+          <li key={date}>
+            <span>{new Date(date).getDate()}</span>
+          </li>
+        );
+      })}
+    </StyledDays>
   );
 };
 

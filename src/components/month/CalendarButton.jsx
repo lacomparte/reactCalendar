@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { setCalendar } from "@/store/actions";
+import { setMonth } from "@/store/actions";
 import { useDispatch } from "react-redux";
 
 const StyledButton = styled.button``;
@@ -20,7 +20,7 @@ const CalendarButton = ({ viewCalendar, viewYear, viewMonth }) => {
       ? new Date(date).setMonth(currentMonth + 1)
       : new Date(date).setMonth(currentMonth - 1);
 
-    dispatch(setCalendar({ calendar: new Date(changeMonth) }));
+    dispatch(setMonth({ month: new Date(changeMonth) }));
   };
 
   return (

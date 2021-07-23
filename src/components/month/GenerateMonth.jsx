@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { setMaxWeek } from "@/store/actions";
 import { getDate } from "@/utils";
 
 const StyledCalendarList = styled.ol`
@@ -18,6 +20,8 @@ const StyledCalendarList = styled.ol`
 `;
 
 const GenerateMonth = ({ setYear, setMonth }) => {
+  const dispatch = useDispatch();
+
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(setYear, setMonth, 1);
 
@@ -59,18 +63,21 @@ const GenerateMonth = ({ setYear, setMonth }) => {
    * 이전달, 이번달, 다음달 달력 합치기
    */
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
+
   // NOTE 굳이 7개씩 자르지 말고 그냥 배열 1개로..
-  // const viewCalendar = Array.from(
-  //   { length: Math.ceil(setMonth.length / 7) },
-  //   (_, i) => {
-  //     const divide = i * 7;
-  //     return setMonth.slice(divide, divide + 7);
-  //   }
-  // );
+  const monthCalendar = Array.from(
+    { length: Math.ceil(viewMonth.length / 7) },
+    (_, i) => {
+      const divide = i * 7;
+      return viewMonth.slice(divide, divide + 7);
+    }
+  );
+
+  dispatch(setMaxWeek({ maxWeek: monthCalendar.length }));
 
   return (
     <StyledCalendarList>
-      {viewMonth.map((date) => {
+      {monthCalendar.flat().map((date) => {
         return (
           <li key={date}>
             <button type="button">{new Date(date).getDate()}</button>

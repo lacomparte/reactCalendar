@@ -5,14 +5,14 @@ import CalendarMonth from "@/components/month/CalendarMonth";
 import CalendarWeek from "@/components/week/CalendarWeek";
 
 const ContainerCalendar = () => {
-  const setCalendar = useSelector((state) => state.calendarReducer.calendar);
-  const [calendarType, setCalendarType] = useState({
-    month: true,
-    week: false,
+  const setMonth = useSelector((state) => {
+    console.log(state);
+    return state.calendarReducer.month;
   });
+  const [calendarType, setCalendarType] = useState("month");
 
   const handleClickCalendarType = (type) => {
-    setCalendarType(() => type);
+    setCalendarType(type);
   };
 
   return (
@@ -21,10 +21,10 @@ const ContainerCalendar = () => {
         calendarType={calendarType}
         handleClickCalendarType={handleClickCalendarType}
       />
-      {calendarType.month ? (
-        <CalendarMonth viewCalendar={setCalendar} />
+      {calendarType === "month" ? (
+        <CalendarMonth viewCalendar={setMonth} />
       ) : (
-        <CalendarWeek viewCalendar={setCalendar} />
+        <CalendarWeek viewCalendar={setMonth} />
       )}
     </>
   );

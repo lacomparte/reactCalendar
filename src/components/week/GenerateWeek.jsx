@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { setMaxWeek } from "@/store/actions";
 import { getDate } from "@/utils";
 
 const StyledDays = styled.ol`
@@ -14,8 +16,9 @@ const StyledDays = styled.ol`
   }
 `;
 
-const GenerateWeek = ({ setYear, setMonth }) => {
-  console.log(setMonth);
+const GenerateWeek = ({ weekIndex, setYear, setMonth }) => {
+  const dispatch = useDispatch();
+
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(setYear, setMonth, 1);
 
@@ -61,7 +64,7 @@ const GenerateWeek = ({ setYear, setMonth }) => {
 
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
 
-  const viewCalendar = Array.from(
+  const weekCalendar = Array.from(
     { length: Math.ceil(viewMonth.length / 7) },
     (_, i) => {
       const divide = i * 7;
@@ -69,9 +72,11 @@ const GenerateWeek = ({ setYear, setMonth }) => {
     }
   );
 
+  dispatch(setMaxWeek({ maxWeek: weekCalendar.length }));
+
   return (
     <StyledDays>
-      {viewCalendar.flat().map((date) => {
+      {weekCalendar[weekIndex]?.map((date) => {
         return (
           <li key={date}>
             <span>{new Date(date).getDate()}</span>

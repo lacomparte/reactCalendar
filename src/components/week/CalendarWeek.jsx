@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { setMonth } from "@/store/actions";
 import CalendarDays from "@/components/common/CalendarDays";
-import CalendarButton from "@/components/month/CalendarButton";
+import CalendarButton from "@/components/week/CalendarButton";
 import GenerateWeek from "@/components/week/GenerateWeek";
 
 const Header = styled.header`
@@ -24,8 +26,12 @@ const StyledCalendarWrap = styled.div`
 `;
 
 const Calendar = ({ viewCalendar }) => {
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.calendarReducer);
+  console.log(state);
   const [viewYear, setViewYear] = useState();
   const [viewMonth, setViewMonth] = useState();
+  const [weekIndex, setWeekIndex] = useState(0);
 
   useEffect(() => {
     setViewYear(new Date(`${viewCalendar}`).getFullYear());
@@ -45,6 +51,14 @@ const Calendar = ({ viewCalendar }) => {
     );
   };
 
+  const handleClickControlButton = (isNext) => {
+    if (isNext) {
+      if (weekIndex === 0) {
+        setWeekIndex();
+      }
+    }
+  };
+
   return (
     <main>
       <p>주단위</p>
@@ -52,12 +66,18 @@ const Calendar = ({ viewCalendar }) => {
         viewCalendar={viewCalendar}
         viewYear={viewYear}
         viewMonth={viewMonth}
+        weekIndex={weekIndex}
+        handleClickControlButton={() => handleClickControlButton}
       />
       <StyledWrap>
         {TimeTable()}
         <StyledCalendarWrap>
           <CalendarDays />
-          <GenerateWeek setYear={viewYear} setMonth={viewMonth} />
+          <GenerateWeek
+            setYear={viewYear}
+            setMonth={viewMonth}
+            weekIndex={weekIndex}
+          />
         </StyledCalendarWrap>
       </StyledWrap>
     </main>

@@ -2,23 +2,23 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledButton = styled.button`
-  color: ${(props) => (props.calendarType ? "red" : "blue")};
+  color: ${({ calendarType }) => (calendarType ? "red" : "blue")};
 `;
 
 const CalendarType = ({ calendarType, handleClickCalendarType }) => {
   return (
     <div>
       <StyledButton
-        calendarType={calendarType.month}
-        onClick={() => handleClickCalendarType({ week: false, month: true })}
+        calendarType={calendarType === "month"}
+        onClick={() => handleClickCalendarType("month")}
         type="button"
         aria-label="월 단위"
       >
         월 단위
       </StyledButton>
       <StyledButton
-        calendarType={calendarType.week}
-        onClick={() => handleClickCalendarType({ week: true, month: false })}
+        calendarType={calendarType === "week"}
+        onClick={() => handleClickCalendarType("week")}
         type="button"
         aria-label="주 단위"
       >

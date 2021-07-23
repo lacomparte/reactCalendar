@@ -15,6 +15,7 @@ const StyledDays = styled.ol`
 `;
 
 const GenerateWeek = ({ setYear, setMonth }) => {
+  console.log(setMonth);
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(setYear, setMonth, 1);
 

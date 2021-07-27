@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { formattingDate } from "@/utils";
 
 const StyledDays = styled.ol`
   display: flex;
@@ -14,9 +15,15 @@ const StyledDays = styled.ol`
     text-align: center;
   }
 `;
+const StyledDate = styled.span`
+  background: white;
+  color: ${({ isToday }) => (isToday ? "red" : "black")};
+  content: ${({ isToday }) => isToday};
+`;
 
 const GenerateWeek = ({ currentDate }) => {
   const [weekCalendar, setWeekCalendar] = useState([]);
+  const now = formattingDate(new Date());
 
   useEffect(() => {
     const today = new Date(currentDate);
@@ -41,9 +48,12 @@ const GenerateWeek = ({ currentDate }) => {
   return (
     <StyledDays>
       {weekCalendar.map((date) => {
+        const isToday = formattingDate(date) === now;
         return (
           <li key={date}>
-            <span>{new Date(date).getDate()}</span>
+            <StyledDate isToday={isToday}>
+              {new Date(date).getDate()}
+            </StyledDate>
           </li>
         );
       })}

@@ -60,7 +60,6 @@ const Calendar = ({ viewCalendar }) => {
 
   return (
     <main>
-      <p>주단위</p>
       <CalendarButton
         viewYear={viewYear}
         viewMonth={viewMonth}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setMonth } from "@/store/actions";
 import CalendarDays from "@/components/common/CalendarDays";
 import CalendarButton from "@/components/week/CalendarButton";
@@ -23,8 +23,7 @@ const StyledCalendarWrap = styled.div`
   flex: 1 1 auto;
 `;
 
-const Calendar = () => {
-  const state = useSelector((state) => state.calendarReducer.month);
+const Calendar = ({ viewCalendar }) => {
   const dispatch = useDispatch();
 
   const [viewYear, setViewYear] = useState(0);
@@ -32,10 +31,10 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState();
 
   useEffect(() => {
-    setViewYear(new Date(`${state}`).getFullYear());
-    setViewMonth(new Date(`${state}`).getMonth() + 1);
-    setCurrentDate(state);
-  }, [state]);
+    setViewYear(new Date(`${viewCalendar}`).getFullYear());
+    setViewMonth(new Date(`${viewCalendar}`).getMonth() + 1);
+    setCurrentDate(viewCalendar);
+  }, [viewCalendar]);
 
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);

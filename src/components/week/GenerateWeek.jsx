@@ -24,10 +24,10 @@ const GenerateWeek = ({ currentDate }) => {
     const todayDate = new Date(today).getDate();
     const betweenLastDayOfWeek = 7 - todayDay;
 
-    const firstDateToCurrentDate = Array.from({ length: todayDay }, (_, i) => {
-      console.log("123123213", todayDate - (i + 1));
-      return new Date(new Date(today).setDate(todayDate - (i + 1)));
-    }).reverse();
+    const firstDateToCurrentDate = Array.from(
+      { length: todayDay },
+      (_, i) => new Date(new Date(today).setDate(todayDate - (i + 1)))
+    ).reverse();
 
     const lastDateToCurrentDate = Array.from(
       { length: betweenLastDayOfWeek },

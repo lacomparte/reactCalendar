@@ -4,10 +4,3 @@ export const setMonth = (month) => {
     payload: month,
   };
 };
-
-export const setMaxWeek = (maxWeek) => {
-  return {
-    type: "SET_MAX_WEEK",
-    payload: maxWeek,
-  };
-};

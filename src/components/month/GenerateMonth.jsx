@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { setMaxWeek } from "@/store/actions";
 import { getDate } from "@/utils";
 
 const StyledCalendarList = styled.ol`
@@ -20,8 +18,6 @@ const StyledCalendarList = styled.ol`
 `;
 
 const GenerateMonth = ({ setYear, setMonth }) => {
-  const dispatch = useDispatch();
-
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(setYear, setMonth, 1);
 
@@ -72,8 +68,6 @@ const GenerateMonth = ({ setYear, setMonth }) => {
       return viewMonth.slice(divide, divide + 7);
     }
   );
-
-  dispatch(setMaxWeek({ maxWeek: monthCalendar.length }));
 
   return (
     <StyledCalendarList>

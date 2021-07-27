@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setMonth } from "@/store/actions";
 import CalendarDays from "@/components/common/CalendarDays";
 import CalendarButton from "@/components/week/CalendarButton";
 import GenerateWeek from "@/components/week/GenerateWeek";
-
-const Header = styled.header`
-  display: flex;
-`;
 
 const StyledTime = styled.ol`
   list-style-type: none;
@@ -18,25 +14,28 @@ const StyledTime = styled.ol`
 
 const StyledWrap = styled.div`
   display: flex;
+  width: 100%;
 `;
 
 const StyledCalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
 `;
 
-const Calendar = ({ viewCalendar }) => {
+const Calendar = () => {
+  const state = useSelector((state) => state.calendarReducer.month);
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.calendarReducer);
-  console.log(state);
-  const [viewYear, setViewYear] = useState();
-  const [viewMonth, setViewMonth] = useState();
-  const [weekIndex, setWeekIndex] = useState(0);
+
+  const [viewYear, setViewYear] = useState(0);
+  const [viewMonth, setViewMonth] = useState(0);
+  const [currentDate, setCurrentDate] = useState();
 
   useEffect(() => {
-    setViewYear(new Date(`${viewCalendar}`).getFullYear());
-    setViewMonth(new Date(`${viewCalendar}`).getMonth() + 1);
-  }, [viewCalendar]);
+    setViewYear(new Date(`${state}`).getFullYear());
+    setViewMonth(new Date(`${state}`).getMonth() + 1);
+    setCurrentDate(state);
+  }, [state]);
 
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
@@ -51,33 +50,29 @@ const Calendar = ({ viewCalendar }) => {
     );
   };
 
-  const handleClickControlButton = (isNext) => {
-    if (isNext) {
-      if (weekIndex === 0) {
-        setWeekIndex();
-      }
-    }
+  const handleClickButton = (e) => {
+    const isNext = e.target.ariaLabel === "다음주";
+    const _date = new Date(currentDate).getDate();
+    const changeDate = isNext ? _date + 7 : _date - 7;
+
+    const date = new Date(new Date(currentDate).setDate(+changeDate));
+    dispatch(setMonth({ month: new Date(date) }));
   };
 
   return (
     <main>
       <p>주단위</p>
       <CalendarButton
-        viewCalendar={viewCalendar}
         viewYear={viewYear}
         viewMonth={viewMonth}
-        weekIndex={weekIndex}
-        handleClickControlButton={() => handleClickControlButton}
+        currentDate={currentDate}
+        handleClickButton={handleClickButton}
       />
       <StyledWrap>
         {TimeTable()}
         <StyledCalendarWrap>
           <CalendarDays />
-          <GenerateWeek
-            setYear={viewYear}
-            setMonth={viewMonth}
-            weekIndex={weekIndex}
-          />
+          <GenerateWeek currentDate={currentDate} />
         </StyledCalendarWrap>
       </StyledWrap>
     </main>

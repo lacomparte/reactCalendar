@@ -1,6 +1,6 @@
-export const setMonth = (month) => {
+export const setCurrentMonth = (currentMonth) => {
   return {
-    type: "SET_MONTH",
-    payload: month,
+    type: 'SET_CURRENT_MONTH',
+    payload: currentMonth,
   };
 };

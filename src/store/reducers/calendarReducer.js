@@ -1,10 +1,10 @@
 const INITIAL_STATE = {
-  month: new Date(),
+  currentMonth: new Date(),
 };
 
 const setCalendar = (state = INITIAL_STATE, actions) => {
   switch (actions.type) {
-    case "SET_MONTH":
+    case 'SET_CURRENT_MONTH':
       return { ...state, ...actions.payload };
     default:
       return state;

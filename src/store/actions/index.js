@@ -1,6 +1,6 @@
-export const setCurrentMonth = (currentMonth) => {
+export const setCurrentCalendar = (calendar) => {
   return {
-    type: 'SET_CURRENT_MONTH',
-    payload: currentMonth,
+    type: 'SET_CURRENT_CALENDAR',
+    payload: calendar,
   };
 };

@@ -3,18 +3,17 @@ const {
   setWebpackOptimizationSplitChunks,
   disableChunk,
   addWebpackAlias,
-  useBabelRc,
-} = require("customize-cra");
-const webpack = require("webpack");
-const PACKAGE = require("./package.json");
-const path = require("path");
+} = require('customize-cra');
+const webpack = require('webpack');
+const PACKAGE = require('./package.json');
+const path = require('path');
 
 function overrideConfig(config) {
   const { name, buildName } = PACKAGE;
   config.output = {
     ...config.output,
-    filename: `${buildName || "bundle"}.js`,
-    chunkFilename: "chunk-vendors.js",
+    filename: `${buildName || 'bundle'}.js`,
+    chunkFilename: 'chunk-vendors.js',
     jsonpFunction: name,
   };
 
@@ -30,13 +29,13 @@ module.exports = {
     setWebpackOptimizationSplitChunks({
       cacheGroups: {
         vendor: {
-          chunks: "initial",
+          chunks: 'initial',
         },
       },
     }),
     disableChunk(), // chunk-vendor.js 파일 생성 X
     addWebpackAlias({
-      "@": path.resolve(__dirname, "./src"),
-    })
+      '@': path.resolve(__dirname, './src'),
+    }),
   ),
 };

@@ -1,22 +1,28 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const Week = styled.article`
   ul {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
     width: 100%;
-    list-style-type: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+    margin-bottom: 1px;
+
     li {
-      flex: 1 1 calc(100% / 7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 30px;
+      font-weight: bold;
+      color: white;
+      background: #252525;
     }
   }
 `;
 
 const CalendarDays = () => {
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
     <>

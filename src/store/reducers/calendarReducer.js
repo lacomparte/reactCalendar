@@ -1,14 +1,14 @@
 const INITIAL_STATE = {
-  currentMonth: new Date(),
+  currentCalendar: new Date(),
 };
 
-const setCalendar = (state = INITIAL_STATE, actions) => {
+const setCurrentCalendar = (state = INITIAL_STATE, actions) => {
   switch (actions.type) {
-    case 'SET_CURRENT_MONTH':
+    case 'SET_CURRENT_CALENDAR':
       return { ...state, ...actions.payload };
     default:
       return state;
   }
 };
 
-export default setCalendar;
+export default setCurrentCalendar;

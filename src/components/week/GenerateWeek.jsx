@@ -15,6 +15,7 @@ const StyledDays = styled.ol`
     text-align: center;
   }
 `;
+
 const StyledDate = styled.span`
   background: white;
   color: ${({ isToday }) => (isToday ? 'red' : 'black')};

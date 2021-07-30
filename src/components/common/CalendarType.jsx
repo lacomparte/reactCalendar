@@ -1,33 +1,40 @@
 import React from 'react';
 import styled from 'styled-components';
-import { setCurrentMonth } from '@/store/actions';
+import { setCurrentCalendar } from '@/store/actions';
 import { useDispatch } from 'react-redux';
 
 const StyledButton = styled.button`
-  color: ${({ calendarType }) => (calendarType ? 'red' : 'blue')};
+  padding: 4px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  background: #e4e4e4;
+  color: ${({ calendarType }) => (calendarType ? 'black' : '#adadad')};
 `;
 
 const StyledWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
-const StyledLeft = styled.div``;
-
-const StyledRight = styled.div``;
-
-const StyledTodayButton = styled.button``;
+const StyledTodayButton = styled.button`
+  padding: 4px 10px;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: white;
+`;
 
 const CalendarType = ({ calendarType, handleClickCalendarType }) => {
   const dispatch = useDispatch();
 
   const handleClickToday = () => {
-    dispatch(setCurrentMonth({ currentMonth: new Date() }));
+    dispatch(setCurrentCalendar({ currentCalendar: new Date() }));
   };
   return (
     <StyledWrap>
-      <StyledLeft>
+      <div>
         <StyledButton
           calendarType={calendarType === 'month'}
           onClick={() => handleClickCalendarType('month')}
@@ -44,10 +51,10 @@ const CalendarType = ({ calendarType, handleClickCalendarType }) => {
         >
           주 단위
         </StyledButton>
-      </StyledLeft>
-      <StyledRight>
+      </div>
+      <div>
         <StyledTodayButton onClick={handleClickToday}>오늘</StyledTodayButton>
-      </StyledRight>
+      </div>
     </StyledWrap>
   );
 };

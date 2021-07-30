@@ -1,23 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
-import { getDate } from '@/utils';
+import { getDate, formattingDate } from '@/utils';
 
 const StyledCalendarList = styled.ol`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
 
   li {
-    flex: 1 1 calc(100% / 7);
     padding: 5px;
+    height: 100px;
     box-sizing: border-box;
     text-align: right;
+    background: #252525;
   }
 `;
 
+const StyledDate = styled.span`
+  color: ${({ isToday }) => (isToday ? 'red' : 'white')};
+  content: ${({ isToday }) => isToday};
+`;
+
 const GenerateMonth = ({ year, month }) => {
+  const now = formattingDate(new Date());
+
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(year, month, 1);
 
@@ -61,9 +68,10 @@ const GenerateMonth = ({ year, month }) => {
   return (
     <StyledCalendarList>
       {viewMonth.map((date) => {
+        const isToday = formattingDate(date) === now;
         return (
           <li key={date}>
-            <button type="button">{new Date(date).getDate()}</button>
+            <StyledDate isToday={isToday}>{new Date(date).getDate()}일</StyledDate>
           </li>
         );
       })}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentMonth } from '@/store/actions';
+import { setCurrentCalendar } from '@/store/actions';
 import CalendarDays from '@/components/common/CalendarDays';
 import CalendarControlButton from '@/components/common/CalendarControlButton';
 import GenerateWeek from '@/components/week/GenerateWeek';
@@ -25,7 +25,7 @@ const StyledCalendarWrap = styled.div`
 
 const Calendar = () => {
   const dispatch = useDispatch();
-  const viewCalendar = useSelector((state) => state.calendarReducer.currentMonth);
+  const viewCalendar = useSelector((state) => state.calendarReducer.currentCalendar);
 
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
@@ -40,14 +40,12 @@ const Calendar = () => {
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
 
-  const handleClickButton = (e) => {
-    const isNext = e.target.ariaLabel.includes('다음');
-
+  const handleClickButton = (direction) => {
+    const isNext = direction === 'next';
     const currentDate = new Date(viewCalendar).getDate();
     const changeDate = isNext ? currentDate + 7 : currentDate - 7;
-
     const newDate = new Date(new Date(viewCalendar).setDate(+changeDate));
-    dispatch(setCurrentMonth({ currentMonth: new Date(newDate) }));
+    dispatch(setCurrentCalendar({ currentCalendar: new Date(newDate) }));
   };
 
   const TimeTable = () => {
@@ -61,7 +59,7 @@ const Calendar = () => {
   };
 
   return (
-    <main>
+    <div>
       <CalendarControlButton
         year={year}
         month={month}
@@ -75,7 +73,7 @@ const Calendar = () => {
           <GenerateWeek currentDate={currentDate} />
         </StyledCalendarWrap>
       </StyledWrap>
-    </main>
+    </div>
   );
 };
 

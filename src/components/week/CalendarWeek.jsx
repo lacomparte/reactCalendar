@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentMonth } from '@/store/actions';
 import CalendarDays from '@/components/common/CalendarDays';
-import CalendarButton from '@/components/week/CalendarButton';
+import CalendarControlButton from '@/components/common/CalendarControlButton';
 import GenerateWeek from '@/components/week/GenerateWeek';
 
 const StyledTime = styled.ol`
@@ -25,8 +24,8 @@ const StyledCalendarWrap = styled.div`
 `;
 
 const Calendar = () => {
-  const viewCalendar = useSelector((state) => state.calendarReducer.currentMonth);
   const dispatch = useDispatch();
+  const viewCalendar = useSelector((state) => state.calendarReducer.currentMonth);
 
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
@@ -41,6 +40,16 @@ const Calendar = () => {
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
 
+  const handleClickButton = (e) => {
+    const isNext = e.target.ariaLabel.includes('다음');
+
+    const currentDate = new Date(viewCalendar).getDate();
+    const changeDate = isNext ? currentDate + 7 : currentDate - 7;
+
+    const newDate = new Date(new Date(viewCalendar).setDate(+changeDate));
+    dispatch(setCurrentMonth({ currentMonth: new Date(newDate) }));
+  };
+
   const TimeTable = () => {
     return (
       <StyledTime>
@@ -51,18 +60,14 @@ const Calendar = () => {
     );
   };
 
-  const handleClickButton = (e) => {
-    const isNext = e.target.ariaLabel === '다음주';
-    const _date = new Date(currentDate).getDate();
-    const changeDate = isNext ? _date + 7 : _date - 7;
-
-    const date = new Date(new Date(currentDate).setDate(+changeDate));
-    dispatch(setCurrentMonth({ currentMonth: new Date(date) }));
-  };
-
   return (
     <main>
-      <CalendarButton year={year} month={month} handleClickButton={handleClickButton} />
+      <CalendarControlButton
+        year={year}
+        month={month}
+        type="week"
+        handleClickButton={handleClickButton}
+      />
       <StyledWrap>
         {TimeTable()}
         <StyledCalendarWrap>

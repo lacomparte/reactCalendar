@@ -24,6 +24,7 @@ const Calendar = () => {
       : new Date(viewCalendar).setMonth(currentMonth - 1);
     dispatch(setCurrentCalendar({ currentCalendar: new Date(changeMonth) }));
   };
+
   return (
     <div>
       <CalendarControlButton

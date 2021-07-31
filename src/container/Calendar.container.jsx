@@ -5,7 +5,7 @@ import CalendarMonth from '@/components/month/CalendarMonth';
 import CalendarWeek from '@/components/week/CalendarWeek';
 
 const StyledWrap = styled.main`
-  height: 100vh;
+  min-height: 100vh;
   padding: 10px;
   box-sizing: border-box;
   background: #1b1b1b;

@@ -3,6 +3,8 @@ const {
   setWebpackOptimizationSplitChunks,
   disableChunk,
   addWebpackAlias,
+  useBabelRc,
+  addBabelPlugins,
 } = require('customize-cra');
 const webpack = require('webpack');
 const PACKAGE = require('./package.json');
@@ -25,6 +27,12 @@ function overrideConfig(config) {
 module.exports = {
   webpack: override(
     useBabelRc(),
+    ...addBabelPlugins([
+      'babel-plugin-styled-components',
+      {
+        displayName: true,
+      },
+    ]),
     overrideConfig,
     setWebpackOptimizationSplitChunks({
       cacheGroups: {

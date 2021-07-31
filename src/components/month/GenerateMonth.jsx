@@ -18,8 +18,9 @@ const StyledCalendarList = styled.ol`
 `;
 
 const StyledDate = styled.span`
+  font-weight: bold;
   color: ${({ isToday }) => (isToday ? 'red' : 'white')};
-  content: ${({ isToday }) => isToday};
+  opacity: ${({ isCurrent }) => !isCurrent && '0.5'};
 `;
 
 const GenerateMonth = ({ year, month }) => {
@@ -35,9 +36,12 @@ const GenerateMonth = ({ year, month }) => {
   // 이번달 마지막 요일
   const currentMonthLastDay = currentMonthLastFullDate.getDay();
 
-  const currentMonth = Array.from({ length: currentMonthLastFullDate.getDate() }, (_, i) =>
-    getDate(year, month, i + 1),
-  );
+  const currentMonth = Array.from({ length: currentMonthLastFullDate.getDate() }, (_, i) => {
+    return {
+      date: getDate(year, month, i + 1),
+      current: true,
+    };
+  });
 
   /**
    * 이전달 배열 만들기
@@ -49,16 +53,22 @@ const GenerateMonth = ({ year, month }) => {
   // 이전달 마지막 요일
   const prevMonthLastDay = prevMonthLastFullDate.getDay();
 
-  const prevMonth = Array.from({ length: currentMonthFirstDay }, (_, i) =>
-    getDate(year, month - 1, prevMonthLastDate - i),
-  ).reverse();
+  const prevMonth = Array.from({ length: currentMonthFirstDay }, (_, i) => {
+    return {
+      date: getDate(year, month - 1, prevMonthLastDate - i),
+      current: false,
+    };
+  }).reverse();
 
   /**
    * 다음달 배열 만들기
    **/
-  const nextMonth = Array.from({ length: 7 - (currentMonthLastDay + 1) }, (_, i) =>
-    getDate(year, month + 1, i + 1),
-  );
+  const nextMonth = Array.from({ length: 7 - (currentMonthLastDay + 1) }, (_, i) => {
+    return {
+      date: getDate(year, month + 1, i + 1),
+      current: false,
+    };
+  });
 
   /**
    * 이전달, 이번달, 다음달 달력 합치기
@@ -67,11 +77,13 @@ const GenerateMonth = ({ year, month }) => {
 
   return (
     <StyledCalendarList>
-      {viewMonth.map((date) => {
+      {viewMonth.map(({ date, current }) => {
         const isToday = formattingDate(date) === now;
         return (
           <li key={date}>
-            <StyledDate isToday={isToday}>{new Date(date).getDate()}일</StyledDate>
+            <StyledDate isCurrent={current} isToday={isToday}>
+              {new Date(date).getDate()}일
+            </StyledDate>
           </li>
         );
       })}

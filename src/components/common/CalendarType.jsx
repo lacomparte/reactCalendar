@@ -7,8 +7,8 @@ const StyledButton = styled.button`
   padding: 4px 10px;
   margin-right: 10px;
   border-radius: 4px;
-  background: #e4e4e4;
-  color: ${({ calendarType }) => (calendarType ? 'black' : '#adadad')};
+  font-weight: ${({ calendarType }) => (calendarType ? 'bold' : 'normal')};
+  color: ${({ calendarType }) => (calendarType ? 'white' : '#808080')};
 `;
 
 const StyledWrap = styled.div`
@@ -23,7 +23,7 @@ const StyledTodayButton = styled.button`
   border: 1px solid #e4e4e4;
   border-radius: 4px;
   box-sizing: border-box;
-  background: white;
+  color: white;
 `;
 
 const CalendarType = ({ calendarType, handleClickCalendarType }) => {
@@ -59,4 +59,4 @@ const CalendarType = ({ calendarType, handleClickCalendarType }) => {
   );
 };
 
-export default CalendarType;
+export default React.memo(CalendarType);

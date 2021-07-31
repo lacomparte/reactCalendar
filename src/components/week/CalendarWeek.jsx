@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentCalendar } from '@/store/actions';
+import CalendarSchedule from './CalendarSchedule';
 import CalendarDays from '@/components/common/CalendarDays';
 import CalendarControlButton from '@/components/common/CalendarControlButton';
 import GenerateWeek from '@/components/week/GenerateWeek';
 
-const StyledTime = styled.ol`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-`;
-
 const StyledWrap = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
 `;
 
@@ -21,6 +17,8 @@ const StyledCalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  padding-left: 50px;
+  box-sizing: border-box;
 `;
 
 const Calendar = () => {
@@ -29,7 +27,9 @@ const Calendar = () => {
 
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
-  const [currentDate, setCurrentDate] = useState();
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [weekCalendar, setWeekCalendar] = useState([]);
 
   useEffect(() => {
     setYear(new Date(`${viewCalendar}`).getFullYear());
@@ -37,8 +37,25 @@ const Calendar = () => {
     setCurrentDate(viewCalendar);
   }, [viewCalendar]);
 
-  const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
-  const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
+  useEffect(() => {
+    const viewCurrentDate = new Date(currentDate);
+    const viewDay = new Date(viewCurrentDate).getDay();
+    const viewDate = new Date(viewCurrentDate).getDate();
+    const betweenLastDayOfWeek = 7 - viewDay;
+
+    const firstDateToCurrentDate = Array.from(
+      { length: viewDay },
+      (_, i) => new Date(new Date(viewCurrentDate).setDate(viewDate - (i + 1))),
+    ).reverse();
+
+    const lastDateToCurrentDate = Array.from(
+      { length: betweenLastDayOfWeek },
+      (_, i) => new Date(new Date(viewCurrentDate).setDate(viewDate + i)),
+    );
+
+    const weekCalendar = [...firstDateToCurrentDate, ...lastDateToCurrentDate];
+    setWeekCalendar(weekCalendar);
+  }, [currentDate]);
 
   const handleClickButton = (direction) => {
     const isNext = direction === 'next';
@@ -48,18 +65,9 @@ const Calendar = () => {
     dispatch(setCurrentCalendar({ currentCalendar: new Date(newDate) }));
   };
 
-  const TimeTable = () => {
-    return (
-      <StyledTime>
-        {time12.map((item, idx) => {
-          return <li key={idx}>{item}</li>;
-        })}
-      </StyledTime>
-    );
-  };
-
+  console.log(weekCalendar);
   return (
-    <div>
+    <>
       <CalendarControlButton
         year={year}
         month={month}
@@ -67,13 +75,13 @@ const Calendar = () => {
         handleClickButton={handleClickButton}
       />
       <StyledWrap>
-        {TimeTable()}
         <StyledCalendarWrap>
           <CalendarDays />
-          <GenerateWeek currentDate={currentDate} />
+          <GenerateWeek weekCalendar={weekCalendar} />
         </StyledCalendarWrap>
+        <CalendarSchedule weekCalendar={weekCalendar} />
       </StyledWrap>
-    </div>
+    </>
   );
 };
 

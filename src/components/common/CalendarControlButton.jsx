@@ -46,4 +46,4 @@ const CalendarControlButton = ({ year, month, type, handleClickButton }) => {
   );
 };
 
-export default CalendarControlButton;
+export default React.memo(CalendarControlButton);

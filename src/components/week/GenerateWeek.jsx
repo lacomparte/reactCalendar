@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { formattingDate } from '@/utils';
 
@@ -32,7 +32,7 @@ const GenerateWeek = ({ weekCalendar }) => {
         const isToday = formattingDate(date) === now;
         return (
           <li key={date}>
-            <StyledDate isToday={isToday}>{new Date(date).getDate()}</StyledDate>
+            <StyledDate isToday={isToday}>{new Date(date).getDate()}일</StyledDate>
           </li>
         );
       })}

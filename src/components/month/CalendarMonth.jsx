@@ -5,7 +5,7 @@ import CalendarDays from '@/components/common/CalendarDays';
 import CalendarControlButton from '@/components/common/CalendarControlButton';
 import GenerateMonth from '@/components/month/GenerateMonth';
 
-const Calendar = () => {
+const Calendar = ({ handleClickOpenModal }) => {
   const viewCalendar = useSelector((state) => state.calendarReducer.currentCalendar);
   const dispatch = useDispatch();
   const [year, setYear] = useState();
@@ -34,7 +34,7 @@ const Calendar = () => {
         handleClickButton={handleClickButton}
       />
       <CalendarDays />
-      <GenerateMonth year={year} month={month} />
+      <GenerateMonth year={year} month={month} handleClickOpenModal={handleClickOpenModal} />
     </div>
   );
 };

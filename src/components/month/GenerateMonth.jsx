@@ -23,7 +23,16 @@ const StyledDate = styled.span`
   opacity: ${({ isCurrent }) => !isCurrent && '0.5'};
 `;
 
-const GenerateMonth = ({ year, month }) => {
+const StyledButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+`;
+
+const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
   const now = formattingDate(new Date());
 
   // 이번달 첫번째 날짜
@@ -76,18 +85,22 @@ const GenerateMonth = ({ year, month }) => {
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
 
   return (
-    <StyledCalendarList>
-      {viewMonth.map(({ date, current }) => {
-        const isToday = formattingDate(date) === now;
-        return (
-          <li key={date}>
-            <StyledDate isCurrent={current} isToday={isToday}>
-              {new Date(date).getDate()}일
-            </StyledDate>
-          </li>
-        );
-      })}
-    </StyledCalendarList>
+    <>
+      <StyledCalendarList>
+        {viewMonth.map(({ date, current }) => {
+          const isToday = formattingDate(date) === now;
+          return (
+            <li key={date}>
+              <StyledButton onClick={(e) => handleClickOpenModal(e, true)}>
+                <StyledDate isCurrent={current} isToday={isToday}>
+                  {new Date(date).getDate()}일
+                </StyledDate>
+              </StyledButton>
+            </li>
+          );
+        })}
+      </StyledCalendarList>
+    </>
   );
 };
 

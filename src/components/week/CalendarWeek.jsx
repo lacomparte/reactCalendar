@@ -86,3 +86,29 @@ const Calendar = () => {
 };
 
 export default Calendar;
+
+// [
+//   {
+//     '2021': {
+//       '01': {
+//         '01' : {
+//           'Mon Jan 01 2021 18:00:00 GMT+0900 (한국 표준시)': {
+//             task: '밥먹기',
+//             duration: 30,
+//             isAllDay: false,
+//           }.
+//           'Mon Jan 01 2021 21:00:00 GMT+0900 (한국 표준시)': {
+//             task: '잠자기',
+//             duration: 90,
+//             isAllDay: false,
+//           }.
+//           'Mon Jan 01 2021 00:00:00 GMT+0900 (한국 표준시)': {
+//             task: '시험준비',
+//             duration: null,
+//             isAllDay: true,
+//           }.
+//         }
+//       }
+//     }
+//   }
+// ]

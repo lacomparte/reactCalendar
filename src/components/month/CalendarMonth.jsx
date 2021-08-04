@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentCalendar } from '@/store/actions';
 import CalendarDays from '@/components/common/CalendarDays';
 import CalendarControlButton from '@/components/common/CalendarControlButton';
 import GenerateMonth from '@/components/month/GenerateMonth';
 
-const Calendar = ({ handleClickOpenModal }) => {
-  const viewCalendar = useSelector((state) => state.calendarReducer.currentCalendar);
-  const dispatch = useDispatch();
+const Calendar = ({ handleClickOpenModal, handleChangeViewCalendar, viewCalendar }) => {
   const [year, setYear] = useState();
   const [month, setMonth] = useState();
 
@@ -22,7 +18,8 @@ const Calendar = ({ handleClickOpenModal }) => {
     const changeMonth = isNext
       ? new Date(viewCalendar).setMonth(currentMonth + 1)
       : new Date(viewCalendar).setMonth(currentMonth - 1);
-    dispatch(setCurrentCalendar({ currentCalendar: new Date(changeMonth) }));
+
+    handleChangeViewCalendar(new Date(changeMonth));
   };
 
   return (

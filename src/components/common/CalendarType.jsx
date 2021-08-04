@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { setCurrentCalendar } from '@/store/actions';
-import { useDispatch } from 'react-redux';
 
 const StyledButton = styled.button`
   padding: 4px 10px;
@@ -26,11 +24,9 @@ const StyledTodayButton = styled.button`
   color: white;
 `;
 
-const CalendarType = ({ calendarType, handleClickCalendarType }) => {
-  const dispatch = useDispatch();
-
+const CalendarType = ({ calendarType, handleClickCalendarType, handleChangeViewCalendar }) => {
   const handleClickToday = () => {
-    dispatch(setCurrentCalendar({ currentCalendar: new Date() }));
+    handleChangeViewCalendar(new Date());
   };
   return (
     <StyledWrap>

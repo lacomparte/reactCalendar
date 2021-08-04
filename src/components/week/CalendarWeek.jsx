@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentCalendar } from '@/store/actions';
 import CalendarSchedule from './CalendarSchedule';
 import CalendarDays from '@/components/common/CalendarDays';
 import CalendarControlButton from '@/components/common/CalendarControlButton';
@@ -21,10 +19,7 @@ const StyledCalendarWrap = styled.div`
   box-sizing: border-box;
 `;
 
-const Calendar = () => {
-  const dispatch = useDispatch();
-  const viewCalendar = useSelector((state) => state.calendarReducer.currentCalendar);
-
+const CalendarWeek = ({ viewCalendar, handleChangeViewCalendar, handleClickOpenModal }) => {
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -62,10 +57,10 @@ const Calendar = () => {
     const currentDate = new Date(viewCalendar).getDate();
     const changeDate = isNext ? currentDate + 7 : currentDate - 7;
     const newDate = new Date(new Date(viewCalendar).setDate(+changeDate));
-    dispatch(setCurrentCalendar({ currentCalendar: new Date(newDate) }));
+
+    handleChangeViewCalendar(new Date(newDate));
   };
 
-  console.log(weekCalendar);
   return (
     <>
       <CalendarControlButton
@@ -85,7 +80,7 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default CalendarWeek;
 
 // [
 //   {

@@ -1,6 +1,7 @@
-export const setCurrentCalendar = (calendar) => {
+export const setSchedule = ({ schedule }) => {
+  console.log(schedule);
   return {
-    type: 'SET_CURRENT_CALENDAR',
-    payload: calendar,
+    type: 'SET_SCHEDULE',
+    payload: schedule,
   };
 };

@@ -15,6 +15,7 @@ const StyledWrap = styled.main`
 const ContainerCalendar = () => {
   const [calendarType, setCalendarType] = useState('month');
   const [openModal, setOpenModal] = useState(false);
+  const [viewCalendar, setViewCalendar] = useState(new Date());
 
   const handleClickCalendarType = (type) => {
     setCalendarType(type);
@@ -24,13 +25,29 @@ const ContainerCalendar = () => {
     setOpenModal(date);
   };
 
+  const handleChangeViewCalendar = (viewMonth) => {
+    setViewCalendar(viewMonth);
+  };
+
   return (
     <StyledWrap>
-      <CalendarType calendarType={calendarType} handleClickCalendarType={handleClickCalendarType} />
+      <CalendarType
+        handleChangeViewCalendar={handleChangeViewCalendar}
+        calendarType={calendarType}
+        handleClickCalendarType={handleClickCalendarType}
+      />
       {calendarType === 'month' ? (
-        <CalendarMonth handleClickOpenModal={handleClickOpenModal} />
+        <CalendarMonth
+          viewCalendar={viewCalendar}
+          handleChangeViewCalendar={handleChangeViewCalendar}
+          handleClickOpenModal={handleClickOpenModal}
+        />
       ) : (
-        <CalendarWeek handleClickOpenModal={handleClickOpenModal} />
+        <CalendarWeek
+          viewCalendar={viewCalendar}
+          handleChangeViewCalendar={handleChangeViewCalendar}
+          handleClickOpenModal={handleClickOpenModal}
+        />
       )}
       <Modal open={openModal} handleClickOpenModal={handleClickOpenModal} />
     </StyledWrap>

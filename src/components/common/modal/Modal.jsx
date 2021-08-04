@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { setSchedule } from '@/store/actions';
 import styled from 'styled-components';
 import { AiFillCloseCircle } from 'react-icons/ai';
 
@@ -84,6 +86,7 @@ const StyledDivision = styled.div`
 `;
 
 const Modal = ({ open, handleClickOpenModal }) => {
+  const dispatch = useDispatch();
   // 추후 util 로 뺄 예정
   // 기본 시간
   const timezoneOffset = new Date().getTimezoneOffset() * 60000;
@@ -196,6 +199,7 @@ const Modal = ({ open, handleClickOpenModal }) => {
       return;
     }
 
+    dispatch(setSchedule({ currentCalendar: new Date() }));
     console.log({
       title: inputData.title.content,
       startDate: new Date(`${inputData.startDate.content} ${inputData.startTime.content}`),

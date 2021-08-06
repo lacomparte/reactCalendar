@@ -85,7 +85,8 @@ const StyledDivision = styled.div`
   width: 48%;
 `;
 
-const Modal = ({ open, handleClickOpenModal }) => {
+const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
+  console.log(modalKeyDate);
   const dispatch = useDispatch();
   // 추후 util 로 뺄 예정
   // 기본 시간

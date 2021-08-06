@@ -91,7 +91,7 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
           const isToday = formattingDate(date) === now;
           return (
             <li key={date}>
-              <StyledButton onClick={(e) => handleClickOpenModal(e, true)}>
+              <StyledButton onClick={() => handleClickOpenModal(date, true)}>
                 <StyledDate isCurrent={current} isToday={isToday}>
                   {new Date(date).getDate()}일
                 </StyledDate>

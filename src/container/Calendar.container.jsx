@@ -16,13 +16,15 @@ const ContainerCalendar = () => {
   const [calendarType, setCalendarType] = useState('month');
   const [openModal, setOpenModal] = useState(false);
   const [viewCalendar, setViewCalendar] = useState(new Date());
+  const [modalKeyDate, setModalKeyDate] = useState('');
 
   const handleClickCalendarType = (type) => {
     setCalendarType(type);
   };
 
-  const handleClickOpenModal = (date) => {
-    setOpenModal(date);
+  const handleClickOpenModal = (date, isOpen) => {
+    setModalKeyDate(date.toString());
+    setOpenModal(isOpen);
   };
 
   const handleChangeViewCalendar = (viewMonth) => {
@@ -49,7 +51,13 @@ const ContainerCalendar = () => {
           handleClickOpenModal={handleClickOpenModal}
         />
       )}
-      <Modal open={openModal} handleClickOpenModal={handleClickOpenModal} />
+      {openModal && (
+        <Modal
+          open={openModal}
+          handleClickOpenModal={handleClickOpenModal}
+          modalKeyDate={modalKeyDate}
+        />
+      )}
     </StyledWrap>
   );
 };

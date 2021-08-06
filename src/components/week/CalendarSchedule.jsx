@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledTime = styled.ol`
+  display: grid;
+  grid-template-rows: repeat(24, 1fr);
+  gap: 1px;
   width: 50px;
+
   li {
     width: 50px;
     height: 100px;
@@ -15,7 +19,7 @@ const StyledSchedule = styled.ol`
   display: grid;
   grid-template-rows: repeat(1, 1fr);
   grid-template-columns: repeat(7, 1fr);
-  gap: 1;
+  gap: 1px;
   width: 100%;
   color: white;
 
@@ -23,6 +27,7 @@ const StyledSchedule = styled.ol`
     overflow: hidden;
     overflow-y: auto;
     height: 100%;
+    background: #3c3c3c;
   }
 `;
 
@@ -35,12 +40,17 @@ const StyledTimeWrap = styled.div`
 `;
 
 const StyledTimeTable = styled.ol`
+  display: grid;
+  grid-template-rows: repeat(24, 1fr);
+  gap: 1px;
+  background: black;
+
   li {
     height: 100px;
   }
 `;
 
-const TimeTable = ({ weekCalendar }) => {
+const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
 
@@ -48,8 +58,9 @@ const TimeTable = ({ weekCalendar }) => {
     const makeDate = Array.from({ length: 24 }, (_, i) => new Date(date).setHours(i, 0, 0, 0));
     return (
       <StyledTimeTable>
-        {makeDate.map((date) => {
-          return <li key={new Date(date)}></li>;
+        {makeDate.map((date, index) => {
+          const convertedDateFormat = (date) => new Date(date).setHours(index, 0, 0);
+          return <li key={new Date(convertedDateFormat(date))}></li>;
         })}
       </StyledTimeTable>
     );
@@ -68,11 +79,15 @@ const TimeTable = ({ weekCalendar }) => {
       </StyledTime>
       <StyledSchedule>
         {weekCalendar.map((date) => {
-          return <li key={date}>{generateDate(date)}</li>;
+          return (
+            <li onClick={() => handleClickOpenModal(date, true)} key={date}>
+              {generateDate(date)}
+            </li>
+          );
         })}
       </StyledSchedule>
     </StyledTimeWrap>
   );
 };
 
-export default React.memo(TimeTable);
+export default React.memo(CalendarSchedule);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { getLocalStorage } from '@/utils';
 import Modal from '@/components/common/modal/Modal';
 import CalendarType from '@/components/common/CalendarType';
 import CalendarMonth from '@/components/month/CalendarMonth';
@@ -30,6 +31,28 @@ const ContainerCalendar = () => {
   const handleChangeViewCalendar = (viewMonth) => {
     setViewCalendar(viewMonth);
   };
+
+  const data = getLocalStorage('calendar') ?? [];
+  console.log(data);
+  // 연도 별로 자르기
+  const separateData = data.reduce((acc, cur) => {
+    const year = new Date(cur.key).getFullYear();
+    const month = new Date(cur.key).getMonth() + 1;
+
+    console.log(cur);
+    const test = acc[year][month] ?? [];
+    acc = {
+      ...acc,
+      [year]: {
+        ...acc[year],
+        [month]: [{ ...test }, { ...cur }],
+      },
+    };
+    console.log(acc[year][month]);
+    return acc;
+  }, []);
+
+  console.log('separateData => ', separateData);
 
   return (
     <StyledWrap>

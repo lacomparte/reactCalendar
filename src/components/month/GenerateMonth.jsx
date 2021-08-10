@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { getDate, formattingDate } from '@/utils';
 
@@ -33,8 +33,11 @@ const StyledButton = styled.button`
 `;
 
 const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
+  const [isFetching, setIsFetching] = useState(false);
+  useEffect(() => {
+    setIsFetching(true);
+  }, [year, month]);
   const now = formattingDate(new Date());
-
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(year, month, 1);
 
@@ -72,7 +75,8 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
   /**
    * 다음달 배열 만들기
    **/
-  const nextMonth = Array.from({ length: 7 - (currentMonthLastDay + 1) }, (_, i) => {
+  const nextMonthLength = 42 - [...prevMonth, ...currentMonth].length;
+  const nextMonth = Array.from({ length: nextMonthLength }, (_, i) => {
     return {
       date: getDate(year, month + 1, i + 1),
       current: false,
@@ -86,20 +90,22 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
 
   return (
     <>
-      <StyledCalendarList>
-        {viewMonth.map(({ date, current }) => {
-          const isToday = formattingDate(date) === now;
-          return (
-            <li key={date}>
-              <StyledButton onClick={() => handleClickOpenModal(date, true)}>
-                <StyledDate isCurrent={current} isToday={isToday}>
-                  {new Date(date).getDate()}일
-                </StyledDate>
-              </StyledButton>
-            </li>
-          );
-        })}
-      </StyledCalendarList>
+      {isFetching && (
+        <StyledCalendarList>
+          {viewMonth.map(({ date, current }) => {
+            const isToday = formattingDate(date) === now;
+            return (
+              <li key={date}>
+                <StyledButton onClick={() => handleClickOpenModal(date, true)}>
+                  <StyledDate isCurrent={current} isToday={isToday}>
+                    {new Date(date).getDate()}일
+                  </StyledDate>
+                </StyledButton>
+              </li>
+            );
+          })}
+        </StyledCalendarList>
+      )}
     </>
   );
 };

@@ -51,57 +51,67 @@ const StyledOptionButton = styled.button`
   background: white;
 `;
 
-const TimeSelectBox = React.forwardRef(
-  ({ type, handleChangeSelectTime, selectedItem, isError }, ref) => {
-    const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-    const am = times.map((item) => `AM ${item}`);
-    const pm = times.map((item) => `PM ${item}`);
-    const timeTable = [...am, ...pm];
+const TimeSelectBox = ({ type, handleChangeSelectTime, selectedTime, isError, time }) => {
+  console.log(1111111);
+  const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const am = times.map((item) => `AM ${item}`);
+  const pm = times.map((item) => `PM ${item}`);
+  const timeTable = [...am, ...pm];
+  const [isOpen, setIsOpen] = useState(false);
 
-    const [isOpen, setIsOpen] = useState(false);
+  const isWeek = time !== null;
 
-    const handleClickSelectBox = () => {
-      setIsOpen(!isOpen);
-    };
-
-    const handleClickSelectOption = (type, value) => {
+  // 월은 지금 시간
+  useEffect(() => {
+    console.log('-------------------------------');
+    console.log(type, time, isWeek);
+    if (isWeek) {
+      const index = type === 'startTime' ? Number(time) : Number(time) + 1;
+      const defaultTime = timeTable.find((item, idx) => item[idx] === item[index]);
+      const value = [index, defaultTime];
       handleChangeSelectTime(type, ...value);
-      setIsOpen(!isOpen);
-    };
+    }
+  }, [type]);
 
-    return (
-      <StyledSelectBox
-        aria-label="시간 선택"
-        role="combobox"
-        aria-hidden="true"
-        aria-expanded="true"
-        ref={ref}
-      >
-        <StyledSelectedOption onClick={handleClickSelectBox} isOpen={isOpen} isError={isError}>
-          {selectedItem[1] || '선택'}
-          <AiFillCaretDown />
-        </StyledSelectedOption>
-        {isOpen && (
-          <StyledOptionWrap>
-            {timeTable.map((item, index) => {
-              const isSelected = item === selectedItem;
-              return (
-                <StyledOptionButton
-                  type="button"
-                  isSelected={isSelected}
-                  onClick={() => handleClickSelectOption(type, [index, item])}
-                  key={index}
-                >
-                  {item}
-                  {isSelected && <AiOutlineCheckCircle />}
-                </StyledOptionButton>
-              );
-            })}
-          </StyledOptionWrap>
-        )}
-      </StyledSelectBox>
-    );
-  },
-);
+  // useEffect(() => {
+  //   console.log(selectedTime);
+  // }, [selectedTime]);
 
-export default React.memo(TimeSelectBox);
+  const handleClickSelectBox = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickSelectOption = (type, value) => {
+    handleChangeSelectTime(type, ...value);
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <StyledSelectBox aria-label="시간 선택" role="combobox" aria-hidden="true" aria-expanded="true">
+      <StyledSelectedOption onClick={handleClickSelectBox} isOpen={isOpen} isError={isError}>
+        {time ? selectedTime[1] : selectedTime[1] || '선택'}
+        <AiFillCaretDown />
+      </StyledSelectedOption>
+      {isOpen && (
+        <StyledOptionWrap>
+          {timeTable.map((item, index) => {
+            const isSelected = item === selectedTime;
+            return (
+              <StyledOptionButton
+                type="button"
+                isSelected={isSelected}
+                onClick={() => handleClickSelectOption(type, [index, item])}
+                key={index}
+              >
+                {item}
+                {isSelected && <AiOutlineCheckCircle />}
+              </StyledOptionButton>
+            );
+          })}
+        </StyledOptionWrap>
+      )}
+    </StyledSelectBox>
+  );
+};
+
+export default TimeSelectBox;

@@ -17,14 +17,17 @@ const ContainerCalendar = () => {
   const [calendarType, setCalendarType] = useState('month');
   const [openModal, setOpenModal] = useState(false);
   const [viewCalendar, setViewCalendar] = useState(new Date());
-  const [modalKeyDate, setModalKeyDate] = useState('');
+  const [modalKeyDate, setModalKeyDate] = useState({});
 
   const handleClickCalendarType = (type) => {
     setCalendarType(type);
   };
 
-  const handleClickOpenModal = (date, isOpen) => {
-    setModalKeyDate(date.toString());
+  const handleClickOpenModal = (date, isOpen, time = null) => {
+    setModalKeyDate({
+      date: date.toString(),
+      time,
+    });
     setOpenModal(isOpen);
   };
 
@@ -33,26 +36,22 @@ const ContainerCalendar = () => {
   };
 
   const data = getLocalStorage('calendar') ?? [];
-  console.log(data);
   // 연도 별로 자르기
   const separateData = data.reduce((acc, cur) => {
-    const year = new Date(cur.key).getFullYear();
-    const month = new Date(cur.key).getMonth() + 1;
+    const year = String(new Date(cur.key).getFullYear());
+    const month = String(new Date(cur.key).getMonth() + 1);
 
-    console.log(cur);
-    const test = acc[year][month] ?? [];
+    const data = acc[year]?.[month] ?? [];
+
     acc = {
       ...acc,
       [year]: {
         ...acc[year],
-        [month]: [{ ...test }, { ...cur }],
+        [month]: [...data, cur],
       },
     };
-    console.log(acc[year][month]);
     return acc;
   }, []);
-
-  console.log('separateData => ', separateData);
 
   return (
     <StyledWrap>

@@ -94,8 +94,9 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
 
   // 추후 util 로 뺄 예정
   // 기본 시간
-  const timezoneOffset = new Date(modalKeyDate).getTimezoneOffset() * 60_000;
-  const startTimezoneDate = new Date(new Date(modalKeyDate) - timezoneOffset);
+  const { date, time } = modalKeyDate;
+  const timezoneOffset = new Date(date).getTimezoneOffset() * 60_000;
+  const startTimezoneDate = new Date(new Date(date) - timezoneOffset);
 
   const defaultStart = startTimezoneDate.toISOString().slice(0, 10);
 
@@ -119,7 +120,6 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
   });
 
   const elementRef = useRef([]);
-  const selectBoxRef = useRef([]);
 
   const handleChangeInputData = (e) => {
     const { value, name } = e.currentTarget;
@@ -145,10 +145,13 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
   });
 
   const handleChangeSelectTime = (type, ...value) => {
-    setSelectedTime({
+    console.log(type, value);
+    console.log({ ...selectedTime });
+    console.log('modal', selectedTime);
+    setSelectedTime(() => ({
       ...selectedTime,
       [type]: [...value],
-    });
+    }));
     setIsError({
       ...isError,
       [type]: false,
@@ -229,6 +232,7 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
         endDate: new Date(`${endDate}`).toString(),
       },
     ];
+    // add 함수로 따로 set localstorage 저장.
     setLocalStorage('calendar', result);
     handleClickClose();
   };
@@ -276,9 +280,9 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                 <TimeSelectBox
                   type="startTime"
                   handleChangeSelectTime={handleChangeSelectTime}
-                  selectedItem={selectedTime.startTime}
+                  selectedTime={selectedTime.startTime}
                   isError={isError.startTime}
-                  ref={(e) => e && (selectBoxRef.current['startTime'] = e)}
+                  time={time}
                 />
               </dd>
             </StyledDivision>
@@ -303,9 +307,9 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                 <TimeSelectBox
                   type="endTime"
                   handleChangeSelectTime={handleChangeSelectTime}
-                  selectedItem={selectedTime.endTime}
+                  selectedTime={selectedTime.endTime}
                   isError={isError.endTime}
-                  ref={(e) => e && (selectBoxRef.current['endTime'] = e)}
+                  time={time}
                 />
               </dd>
             </StyledDivision>

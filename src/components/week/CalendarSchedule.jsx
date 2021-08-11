@@ -60,7 +60,7 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
       <StyledTimeTable>
         {makeDate.map((date, index) => {
           const convertedDateFormat = (date) => new Date(date).setHours(index, 0, 0);
-          return <li key={new Date(convertedDateFormat(date))}></li>;
+          return <li aria-label={`${index} 시`} key={new Date(convertedDateFormat(date))}></li>;
         })}
       </StyledTimeTable>
     );
@@ -78,9 +78,15 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
         })}
       </StyledTime>
       <StyledSchedule>
-        {weekCalendar.map((date) => {
+        {weekCalendar.map((date, idx) => {
           return (
-            <li onClick={() => handleClickOpenModal(date, true)} key={date}>
+            <li
+              onClick={(e) => {
+                const time = e.target.ariaLabel.replace(/[^0-9]/g, '');
+                handleClickOpenModal(date, true, time);
+              }}
+              key={date}
+            >
               {generateDate(date)}
             </li>
           );

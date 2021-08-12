@@ -23,7 +23,8 @@ const ContainerCalendar = () => {
     setCalendarType(type);
   };
 
-  const handleClickOpenModal = (date, isOpen, time = null) => {
+  const handleClickOpenModal = (date, isOpen, time) => {
+    console.log('1', date);
     setModalKeyDate({
       date: date.toString(),
       time,

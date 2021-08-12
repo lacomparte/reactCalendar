@@ -1,5 +1,6 @@
 // month 기준 이전달 return
-export const getDate = (year, month, day = 1) => new Date(year, month - 1, day);
+export const getDate = (year, month, day = 1, hour = 0, min = 0) =>
+  new Date(year, month - 1, day, hour, min);
 
 export const formattingDate = (date = new Date().toString()) => {
   const convertToString = typeof date !== 'string' ? date.toString() : date;

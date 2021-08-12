@@ -145,11 +145,10 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
   });
 
   const handleChangeSelectTime = (type, ...value) => {
-    console.log(type, value);
-    console.log({ ...selectedTime });
-    console.log('modal', selectedTime);
-    setSelectedTime(() => ({
-      ...selectedTime,
+    // 동기적으로 처리하려면 함수형으로 setter 함수를 실행
+    // 단, 이때 인자로 값을 받음
+    setSelectedTime((selectTime) => ({
+      ...selectTime,
       [type]: [...value],
     }));
     setIsError({

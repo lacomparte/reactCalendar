@@ -34,10 +34,14 @@ const StyledButton = styled.button`
 
 const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
   const [isFetching, setIsFetching] = useState(false);
+
   useEffect(() => {
     setIsFetching(true);
   }, [year, month]);
+
   const now = formattingDate(new Date());
+  const timeNow = new Date().getHours();
+
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(year, month, 1);
 
@@ -94,9 +98,10 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
         <StyledCalendarList>
           {viewMonth.map(({ date, current }) => {
             const isToday = formattingDate(date) === now;
+            console.log(date);
             return (
               <li key={date}>
-                <StyledButton onClick={() => handleClickOpenModal(date, true)}>
+                <StyledButton onClick={() => handleClickOpenModal(date, true, timeNow)}>
                   <StyledDate isCurrent={current} isToday={isToday}>
                     {new Date(date).getDate()}일
                   </StyledDate>

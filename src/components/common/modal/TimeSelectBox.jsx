@@ -52,30 +52,24 @@ const StyledOptionButton = styled.button`
 `;
 
 const TimeSelectBox = ({ type, handleChangeSelectTime, selectedTime, isError, time }) => {
-  console.log(1111111);
-  const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const times = Array.from({ length: 12 }, (_, i) => {
+    const value = i === 0 ? ['12:00', '12:30'] : [`${i}:00`, `${i}:30`];
+    return value;
+  }).flat();
+
   const am = times.map((item) => `AM ${item}`);
   const pm = times.map((item) => `PM ${item}`);
   const timeTable = [...am, ...pm];
   const [isOpen, setIsOpen] = useState(false);
 
-  const isWeek = time !== null;
-
-  // 월은 지금 시간
+  // NOTE 시작시간이 오후 11시면...?ㅠㅠ
   useEffect(() => {
-    console.log('-------------------------------');
-    console.log(type, time, isWeek);
-    if (isWeek) {
-      const index = type === 'startTime' ? Number(time) : Number(time) + 1;
-      const defaultTime = timeTable.find((item, idx) => item[idx] === item[index]);
-      const value = [index, defaultTime];
-      handleChangeSelectTime(type, ...value);
-    }
-  }, [type]);
-
-  // useEffect(() => {
-  //   console.log(selectedTime);
-  // }, [selectedTime]);
+    console.log(time);
+    const index = type === 'startTime' ? Number(time) * 2 : Number(time) * 2 + 1;
+    const defaultTime = timeTable.find((item) => item === timeTable[index]);
+    const value = [index, defaultTime];
+    handleChangeSelectTime(type, ...value);
+  }, [type, time]);
 
   const handleClickSelectBox = () => {
     setIsOpen(!isOpen);

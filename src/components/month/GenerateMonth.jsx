@@ -133,12 +133,14 @@ const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
 
   const CurrentDaySchedule = (date) => {
-    const filtered = data?.filter(
+    if (!data) return;
+
+    const filtered = data.filter(
       (item) => new Date(item.key).getDate() === new Date(date).getDate(),
     );
     const randomColor = '#' + Math.random().toString(16).substr(-6);
 
-    return filtered?.map((item, idx) => {
+    return filtered.map((item, idx) => {
       return (
         <StyledScheduledItem key={idx} itemColor={randomColor}>
           <StyledScheduledBox>{item.title}</StyledScheduledBox>

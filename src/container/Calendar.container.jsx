@@ -41,24 +41,25 @@ const ContainerCalendar = () => {
   };
 
   const data = getLocalStorage('calendar') ?? [];
+
+  // console.log(modalKeyDate);
   // 연도 별로 자르기
-  const separateData = data.reduce((acc, cur) => {
-    const year = String(new Date(cur.key).getFullYear());
-    const month = String(new Date(cur.key).getMonth() + 1);
+  const separateData =
+    data.reduce((acc, cur) => {
+      const year = String(new Date(cur.key).getFullYear());
+      const month = String(new Date(cur.key).getMonth() + 1);
 
-    const data = acc[year]?.[month] ?? [];
+      const data = acc[year]?.[month] ?? [];
 
-    acc = {
-      ...acc,
-      [year]: {
-        ...acc[year],
-        [month]: [...data, cur],
-      },
-    };
-    return acc;
-  }, []);
-
-  // console.log(separateData);
+      acc = {
+        ...acc,
+        [year]: {
+          ...acc[year],
+          [month]: [...data, cur],
+        },
+      };
+      return acc;
+    }, []) || [];
 
   return (
     <StyledWrap>
@@ -72,12 +73,14 @@ const ContainerCalendar = () => {
           viewCalendar={viewCalendar}
           handleChangeViewCalendar={handleChangeViewCalendar}
           handleClickOpenModal={handleClickOpenModal}
+          separateData={separateData}
         />
       ) : (
         <CalendarWeek
           viewCalendar={viewCalendar}
           handleChangeViewCalendar={handleChangeViewCalendar}
           handleClickOpenModal={handleClickOpenModal}
+          separateData={separateData}
         />
       )}
       {openModal && (

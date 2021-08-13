@@ -9,9 +9,8 @@ const StyledCalendarList = styled.ol`
   gap: 1px;
 
   li {
-    padding: 5px;
+    position: relative;
     height: 100px;
-    box-sizing: border-box;
     text-align: right;
     background: #252525;
   }
@@ -30,14 +29,54 @@ const StyledButton = styled.button`
   justify-content: flex-start;
   width: 100%;
   height: 100%;
+  padding: 5px;
+  box-sizing: border-box;
 `;
 
-const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
+const StyledSchedule = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 3px;
+  right: 3px;
+  bottom: 0;
+`;
+
+const StyledScheduledItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  border-radius: 3px;
+  color: white;
+  text-align: left;
+
+  &:: before {
+    flex: 0 0 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 100%;
+    margin: 0 5px;
+    background: ${({ itemColor }) => itemColor};
+    content: '';
+  }
+
+  & + p {
+    margin-top: 4px;
+  }
+`;
+
+const StyledScheduledBox = styled.p`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     setIsFetching(true);
-  }, [year, month]);
+  }, [year, month, data]);
 
   const now = formattingDate(new Date());
   const hour = new Date().getHours();
@@ -93,6 +132,21 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
    */
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
 
+  const CurrentDaySchedule = (date) => {
+    const filtered = data?.filter(
+      (item) => new Date(item.key).getDate() === new Date(date).getDate(),
+    );
+    const randomColor = '#' + Math.random().toString(16).substr(-6);
+
+    return filtered?.map((item, idx) => {
+      return (
+        <StyledScheduledItem key={idx} itemColor={randomColor}>
+          <StyledScheduledBox>{item.title}</StyledScheduledBox>
+        </StyledScheduledItem>
+      );
+    });
+  };
+
   return (
     <>
       {isFetching && (
@@ -101,12 +155,14 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
             const isToday = formattingDate(date) === now;
             const hour = new Date(date).getHours();
             const min = new Date(date).getMinutes();
+
             return (
               <li key={date}>
                 <StyledButton onClick={() => handleClickOpenModal(true, date, hour, min)}>
                   <StyledDate isCurrent={current} isToday={isToday}>
                     {new Date(date).getDate()}일
                   </StyledDate>
+                  <StyledSchedule>{CurrentDaySchedule(date)}</StyledSchedule>
                 </StyledButton>
               </li>
             );

@@ -41,7 +41,7 @@ const StyledSchedule = styled.div`
   bottom: 0;
 `;
 
-const StyledScheduledItem = styled.div`
+const StyledScheduledItemButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -142,9 +142,9 @@ const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
 
     return filtered.map((item, idx) => {
       return (
-        <StyledScheduledItem key={idx} itemColor={randomColor}>
+        <StyledScheduledItemButton key={idx} itemColor={randomColor}>
           <StyledScheduledBox>{item.title}</StyledScheduledBox>
-        </StyledScheduledItem>
+        </StyledScheduledItemButton>
       );
     });
   };
@@ -164,8 +164,8 @@ const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
                   <StyledDate isCurrent={current} isToday={isToday}>
                     {new Date(date).getDate()}일
                   </StyledDate>
-                  <StyledSchedule>{CurrentDaySchedule(date)}</StyledSchedule>
                 </StyledButton>
+                <StyledSchedule>{CurrentDaySchedule(date)}</StyledSchedule>
               </li>
             );
           })}

@@ -51,7 +51,7 @@ const StyledOptionButton = styled.button`
   background: white;
 `;
 
-const TimeSelectBox = ({ type, handleChangeSelectTime, selectedTime, isError, time }) => {
+const TimeSelectBox = ({ handleChangeSelectTime, selectedTime, isError, type, hour, min }) => {
   const times = Array.from({ length: 12 }, (_, i) => {
     const value = i === 0 ? ['12:00', '12:30'] : [`${i}:00`, `${i}:30`];
     return value;
@@ -64,37 +64,37 @@ const TimeSelectBox = ({ type, handleChangeSelectTime, selectedTime, isError, ti
 
   // NOTE 시작시간이 오후 11시면...?ㅠㅠ
   useEffect(() => {
-    console.log(time);
-    const index = type === 'startTime' ? Number(time) * 2 : Number(time) * 2 + 1;
+    const isHalfHour = min > 30 ? 1 : 0;
+    const index =
+      type === 'startTime' ? Number(hour) * 2 + isHalfHour : Number(hour) * 2 + isHalfHour + 1;
     const defaultTime = timeTable.find((item) => item === timeTable[index]);
-    const value = [index, defaultTime];
-    handleChangeSelectTime(type, ...value);
-  }, [type, time]);
+    handleChangeSelectTime(type, index, defaultTime);
+  }, [type, hour, min]);
 
   const handleClickSelectBox = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleClickSelectOption = (type, value) => {
-    handleChangeSelectTime(type, ...value);
+  const handleClickSelectOption = (type, index, time) => {
+    handleChangeSelectTime(type, index, time);
     setIsOpen(!isOpen);
   };
 
   return (
     <StyledSelectBox aria-label="시간 선택" role="combobox" aria-hidden="true" aria-expanded="true">
       <StyledSelectedOption onClick={handleClickSelectBox} isOpen={isOpen} isError={isError}>
-        {time ? selectedTime[1] : selectedTime[1] || '선택'}
+        {selectedTime.time}
         <AiFillCaretDown />
       </StyledSelectedOption>
       {isOpen && (
         <StyledOptionWrap>
           {timeTable.map((item, index) => {
-            const isSelected = item === selectedTime;
+            const isSelected = item === selectedTime[1];
             return (
               <StyledOptionButton
                 type="button"
                 isSelected={isSelected}
-                onClick={() => handleClickSelectOption(type, [index, item])}
+                onClick={() => handleClickSelectOption(type, index, item)}
                 key={index}
               >
                 {item}

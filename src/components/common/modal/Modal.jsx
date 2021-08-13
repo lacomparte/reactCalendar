@@ -94,7 +94,7 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
 
   // 추후 util 로 뺄 예정
   // 기본 시간
-  const { date, time } = modalKeyDate;
+  const { date, hour, min } = modalKeyDate;
   const timezoneOffset = new Date(date).getTimezoneOffset() * 60_000;
   const startTimezoneDate = new Date(new Date(date) - timezoneOffset);
 
@@ -140,20 +140,32 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
   };
 
   const [selectedTime, setSelectedTime] = useState({
-    startTime: [],
-    endTime: [],
+    startTime: {
+      index: 0,
+      time: '',
+    },
+    endTime: {
+      index: 0,
+      time: '',
+    },
   });
 
-  const handleChangeSelectTime = (type, ...value) => {
+  const handleChangeSelectTime = (type, index, time) => {
     // 동기적으로 처리하려면 함수형으로 setter 함수를 실행
     // 단, 이때 인자로 값을 받음
-    setSelectedTime((selectTime) => ({
-      ...selectTime,
-      [type]: [...value],
-    }));
+    setSelectedTime((selectTime) => {
+      return {
+        ...selectTime,
+        [type]: {
+          index,
+          time,
+        },
+      };
+    });
+
     setIsError({
       ...isError,
-      [type]: false,
+      type: false,
     });
   };
 
@@ -197,12 +209,9 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
       return;
     }
 
-    const startDate = `${inputData.startDate} ${selectedTime.startTime[0]
-      .toString()
-      .padStart(2, 0)}:00:00`;
-    const endDate = `${inputData.endDate} ${selectedTime.endTime[0]
-      .toString()
-      .padStart(2, 0)}:00:00`;
+    const getSelectedTime = (name) => selectedTime[name][1].slice(3);
+    const startDate = `${inputData.startDate} ${getSelectedTime('startTime')}`;
+    const endDate = `${inputData.endDate} ${getSelectedTime('endTime')}`;
 
     const isSameTime =
       new Date(`${startDate}`).toISOString() === new Date(`${endDate}`).toISOString();
@@ -281,7 +290,8 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                   handleChangeSelectTime={handleChangeSelectTime}
                   selectedTime={selectedTime.startTime}
                   isError={isError.startTime}
-                  time={time}
+                  hour={hour}
+                  min={min}
                 />
               </dd>
             </StyledDivision>
@@ -308,7 +318,8 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                   handleChangeSelectTime={handleChangeSelectTime}
                   selectedTime={selectedTime.endTime}
                   isError={isError.endTime}
-                  time={time}
+                  hour={hour}
+                  min={min}
                 />
               </dd>
             </StyledDivision>

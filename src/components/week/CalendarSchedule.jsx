@@ -78,12 +78,12 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
         })}
       </StyledTime>
       <StyledSchedule>
-        {weekCalendar.map((date, idx) => {
+        {weekCalendar.map((date) => {
           return (
             <li
               onClick={(e) => {
-                const time = e.target.ariaLabel.replace(/[^0-9]/g, '');
-                handleClickOpenModal(date, true, time);
+                const hour = e.target.ariaLabel.replace(/[^0-9]/g, '');
+                handleClickOpenModal(true, date, hour);
               }}
               key={date}
             >

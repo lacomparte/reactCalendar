@@ -40,7 +40,8 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
   }, [year, month]);
 
   const now = formattingDate(new Date());
-  const timeNow = new Date().getHours();
+  const hour = new Date().getHours();
+  const min = new Date().getMinutes();
 
   // 이번달 첫번째 날짜
   const currentMonthFirstFullDate = getDate(year, month, 1);
@@ -54,7 +55,7 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
 
   const currentMonth = Array.from({ length: currentMonthLastFullDate.getDate() }, (_, i) => {
     return {
-      date: getDate(year, month, i + 1),
+      date: getDate(year, month, i + 1, hour, min),
       current: true,
     };
   });
@@ -71,7 +72,7 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
 
   const prevMonth = Array.from({ length: currentMonthFirstDay }, (_, i) => {
     return {
-      date: getDate(year, month - 1, prevMonthLastDate - i),
+      date: getDate(year, month - 1, prevMonthLastDate - i, hour, min),
       current: false,
     };
   }).reverse();
@@ -82,7 +83,7 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
   const nextMonthLength = 42 - [...prevMonth, ...currentMonth].length;
   const nextMonth = Array.from({ length: nextMonthLength }, (_, i) => {
     return {
-      date: getDate(year, month + 1, i + 1),
+      date: getDate(year, month + 1, i + 1, hour, min),
       current: false,
     };
   });
@@ -98,10 +99,11 @@ const GenerateMonth = ({ year, month, handleClickOpenModal }) => {
         <StyledCalendarList>
           {viewMonth.map(({ date, current }) => {
             const isToday = formattingDate(date) === now;
-            console.log(date);
+            const hour = new Date(date).getHours();
+            const min = new Date(date).getMinutes();
             return (
               <li key={date}>
-                <StyledButton onClick={() => handleClickOpenModal(date, true, timeNow)}>
+                <StyledButton onClick={() => handleClickOpenModal(true, date, hour, min)}>
                   <StyledDate isCurrent={current} isToday={isToday}>
                     {new Date(date).getDate()}일
                   </StyledDate>

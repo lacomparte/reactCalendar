@@ -17,17 +17,21 @@ const ContainerCalendar = () => {
   const [calendarType, setCalendarType] = useState('month');
   const [openModal, setOpenModal] = useState(false);
   const [viewCalendar, setViewCalendar] = useState(new Date());
-  const [modalKeyDate, setModalKeyDate] = useState({});
+  const [modalKeyDate, setModalKeyDate] = useState({
+    date: new Date(),
+    hour: new Date().getHours(),
+    min: new Date().getMinutes(),
+  });
 
   const handleClickCalendarType = (type) => {
     setCalendarType(type);
   };
 
-  const handleClickOpenModal = (date, isOpen, time) => {
-    console.log('1', date);
+  const handleClickOpenModal = (isOpen, date = '', hour = 0, min = 0) => {
     setModalKeyDate({
       date: date.toString(),
-      time,
+      hour,
+      min,
     });
     setOpenModal(isOpen);
   };
@@ -53,6 +57,8 @@ const ContainerCalendar = () => {
     };
     return acc;
   }, []);
+
+  // console.log(separateData);
 
   return (
     <StyledWrap>

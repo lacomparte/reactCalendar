@@ -7,6 +7,18 @@ export const formattingDate = (date) => {
   return convertToString.slice(0, 10);
 };
 
+export const getCurrentData = (data, date) => {
+  console.log(data);
+  return data
+    ? data.reduce((acc, cur) => {
+        if (new Date(date).toDateString() === new Date(cur.key).toDateString()) {
+          acc.push(cur);
+        }
+        return acc;
+      }, [])
+    : [];
+};
+
 export const getLocalStorage = (key) => JSON.parse(window.localStorage.getItem(key));
 export const setLocalStorage = (key, value) =>
   window.localStorage.setItem(key, JSON.stringify(value));

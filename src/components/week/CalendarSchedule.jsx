@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import CurrentDaySchedule from '@/components/common/CurrentDaySchedule';
+import { getCurrentData } from '@/utils';
 
 const StyledTime = styled.ol`
   display: grid;
@@ -15,7 +17,7 @@ const StyledTime = styled.ol`
   }
 `;
 
-const StyledSchedule = styled.ol`
+const StyledScheduleOl = styled.ol`
   display: grid;
   grid-template-rows: repeat(1, 1fr);
   grid-template-columns: repeat(7, 1fr);
@@ -50,9 +52,31 @@ const StyledTimeTable = styled.ol`
   }
 `;
 
-const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
+const StyledButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+`;
+
+const StyledSchedule = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 3px;
+  right: 3px;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: calc(100% - 30px);
+`;
+
+const CalendarSchedule = ({ weekCalendar, handleClickOpenModal, data }) => {
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
+  console.log(data);
 
   const generateDate = (date) => {
     const makeDate = Array.from({ length: 24 }, (_, i) => new Date(date).setHours(i, 0, 0, 0));
@@ -60,20 +84,29 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
       <StyledTimeTable aria-label={date}>
         {makeDate.map((date, index) => {
           const convertedDateFormat = (date) => new Date(date).setHours(index, 0, 0);
+          const existData = getCurrentData(data, date);
           const modalProps = {
-            title: '',
+            title: existData.title || '',
             startDate: date,
             endDate: date,
           };
+          console.log(existData);
           return (
-            <li
-              aria-label={`${index} 시`}
-              key={new Date(convertedDateFormat(date))}
-              onClick={(e) => {
-                const hour = e.target.ariaLabel.replace(/[^0-9]/g, '');
-                handleClickOpenModal(true, modalProps);
-              }}
-            ></li>
+            <li aria-label={`${index} 시`} key={new Date(convertedDateFormat(date))}>
+              <StyledButton
+                type="button"
+                onClick={() => handleClickOpenModal(true, modalProps)}
+              ></StyledButton>
+              {existData.length > 0 && (
+                <StyledSchedule>
+                  <CurrentDaySchedule
+                    handleClickOpenModal={handleClickOpenModal}
+                    existData={existData}
+                    type="week"
+                  />
+                </StyledSchedule>
+              )}
+            </li>
           );
         })}
       </StyledTimeTable>
@@ -91,11 +124,11 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
           );
         })}
       </StyledTime>
-      <StyledSchedule>
+      <StyledScheduleOl>
         {weekCalendar.map((date) => {
           return <li key={date}>{generateDate(date)}</li>;
         })}
-      </StyledSchedule>
+      </StyledScheduleOl>
     </StyledTimeWrap>
   );
 };

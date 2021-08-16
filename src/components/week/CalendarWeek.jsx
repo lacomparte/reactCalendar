@@ -19,33 +19,38 @@ const StyledCalendarWrap = styled.div`
   box-sizing: border-box;
 `;
 
-const CalendarWeek = ({ viewCalendar, handleChangeViewCalendar, handleClickOpenModal }) => {
+const CalendarWeek = ({
+  viewCalendar,
+  handleChangeViewCalendar,
+  handleClickOpenModal,
+  separateData,
+}) => {
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [data, setDate] = useState([]);
   const [weekCalendar, setWeekCalendar] = useState([]);
 
   useEffect(() => {
     setYear(new Date(`${viewCalendar}`).getFullYear());
     setMonth(new Date(`${viewCalendar}`).getMonth() + 1);
+    setDate(separateData?.[year]?.[month]);
     setCurrentDate(viewCalendar);
-  }, [viewCalendar]);
+  }, [viewCalendar, separateData]);
 
   useEffect(() => {
-    const viewCurrentDate = new Date(currentDate);
-    const viewDay = new Date(viewCurrentDate).getDay();
-    const viewDate = new Date(viewCurrentDate).getDate();
+    const viewDay = new Date(currentDate).getDay();
+    const viewDate = new Date(currentDate).getDate();
     const betweenLastDayOfWeek = 7 - viewDay;
 
     const firstDateToCurrentDate = Array.from(
       { length: viewDay },
-      (_, i) => new Date(viewCurrentDate.setDate(viewDate - (i + 1))),
+      (_, i) => new Date(currentDate.setDate(viewDate - (i + 1))),
     ).reverse();
 
     const lastDateToCurrentDate = Array.from(
       { length: betweenLastDayOfWeek },
-      (_, i) => new Date(viewCurrentDate.setDate(viewDate + i)),
+      (_, i) => new Date(currentDate.setDate(viewDate + i)),
     );
 
     const weekCalendar = [...firstDateToCurrentDate, ...lastDateToCurrentDate];
@@ -74,7 +79,11 @@ const CalendarWeek = ({ viewCalendar, handleChangeViewCalendar, handleClickOpenM
           <CalendarDays />
           <GenerateWeek weekCalendar={weekCalendar} />
         </StyledCalendarWrap>
-        <CalendarSchedule handleClickOpenModal={handleClickOpenModal} weekCalendar={weekCalendar} />
+        <CalendarSchedule
+          handleClickOpenModal={handleClickOpenModal}
+          weekCalendar={weekCalendar}
+          data={data}
+        />
       </StyledWrap>
     </>
   );

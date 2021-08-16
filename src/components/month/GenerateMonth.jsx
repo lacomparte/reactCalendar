@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import CurrentDaySchedule from '@/components/month/CurrentDaySchedule';
-import { getDate, formattingDate } from '@/utils';
+import CurrentDaySchedule from '@/components/common/CurrentDaySchedule';
+import { getDate, formattingDate, getCurrentData } from '@/utils';
 
 const StyledCalendarList = styled.ol`
   display: grid;
@@ -41,7 +41,7 @@ const StyledSchedule = styled.div`
   right: 3px;
   overflow: hidden;
   overflow-y: auto;
-  height: calc(100% - 30px);
+  max-height: calc(100% - 30px);
 `;
 
 const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
@@ -111,14 +111,7 @@ const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
         <StyledCalendarList>
           {viewMonth.map(({ date, current }) => {
             const isToday = formattingDate(date) === now;
-            const existData = data
-              ? data.reduce((acc, cur) => {
-                  if (new Date(date).toDateString() === new Date(cur.key).toDateString()) {
-                    acc.push(cur);
-                  }
-                  return acc;
-                }, [])
-              : [];
+            const existData = getCurrentData(data, date);
             const modalProps = {
               title: existData.title || '',
               startDate: date,

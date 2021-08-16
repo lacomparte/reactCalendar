@@ -40,12 +40,12 @@ const CalendarWeek = ({ viewCalendar, handleChangeViewCalendar, handleClickOpenM
 
     const firstDateToCurrentDate = Array.from(
       { length: viewDay },
-      (_, i) => new Date(new Date(viewCurrentDate).setDate(viewDate - (i + 1))),
+      (_, i) => new Date(viewCurrentDate.setDate(viewDate - (i + 1))),
     ).reverse();
 
     const lastDateToCurrentDate = Array.from(
       { length: betweenLastDayOfWeek },
-      (_, i) => new Date(new Date(viewCurrentDate).setDate(viewDate + i)),
+      (_, i) => new Date(viewCurrentDate.setDate(viewDate + i)),
     );
 
     const weekCalendar = [...firstDateToCurrentDate, ...lastDateToCurrentDate];

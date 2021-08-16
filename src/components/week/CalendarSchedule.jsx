@@ -57,10 +57,24 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
   const generateDate = (date) => {
     const makeDate = Array.from({ length: 24 }, (_, i) => new Date(date).setHours(i, 0, 0, 0));
     return (
-      <StyledTimeTable>
+      <StyledTimeTable aria-label={date}>
         {makeDate.map((date, index) => {
           const convertedDateFormat = (date) => new Date(date).setHours(index, 0, 0);
-          return <li aria-label={`${index} 시`} key={new Date(convertedDateFormat(date))}></li>;
+          const modalProps = {
+            title: '',
+            startDate: date,
+            endDate: date,
+          };
+          return (
+            <li
+              aria-label={`${index} 시`}
+              key={new Date(convertedDateFormat(date))}
+              onClick={(e) => {
+                const hour = e.target.ariaLabel.replace(/[^0-9]/g, '');
+                handleClickOpenModal(true, modalProps);
+              }}
+            ></li>
+          );
         })}
       </StyledTimeTable>
     );
@@ -71,7 +85,7 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
       <StyledTime>
         {time12.map((item, idx) => {
           return (
-            <li key={idx}>
+            <li key={idx} aria-label={idx}>
               <span>{item}</span>
             </li>
           );
@@ -79,17 +93,7 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal }) => {
       </StyledTime>
       <StyledSchedule>
         {weekCalendar.map((date) => {
-          return (
-            <li
-              onClick={(e) => {
-                const hour = e.target.ariaLabel.replace(/[^0-9]/g, '');
-                handleClickOpenModal(true, date, hour);
-              }}
-              key={date}
-            >
-              {generateDate(date)}
-            </li>
-          );
+          return <li key={date}>{generateDate(date)}</li>;
         })}
       </StyledSchedule>
     </StyledTimeWrap>

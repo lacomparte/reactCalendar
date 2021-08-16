@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { setLocalStorage, getLocalStorage } from '@/utils';
+import { setLocalStorage, getLocalStorage, formattingDate } from '@/utils';
 import TimeSelectBox from '@/components/common/modal/TimeSelectBox';
 
 const StyledModalWrap = styled.div`
@@ -89,25 +89,39 @@ const StyledDivision = styled.div`
   width: 48%;
 `;
 
-const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
+const Modal = ({ open, handleClickOpenModal, modalProps }) => {
   const dispatch = useDispatch();
+  const { title, startDate, endDate } = modalProps ?? '';
 
-  // 추후 util 로 뺄 예정
-  // 기본 시간
-  const { date, hour, min } = modalKeyDate;
-  const timezoneOffset = new Date(date).getTimezoneOffset() * 60_000;
-  const startTimezoneDate = new Date(new Date(date) - timezoneOffset);
+  // 수정 유무
+  const isModify = title ? true : false;
 
-  const defaultStart = startTimezoneDate.toISOString().slice(0, 10);
+  const getTimezoneTime = (time) => {
+    const timezoneOffset = time.getTimezoneOffset() * 60_000;
+    return new Date(time - timezoneOffset);
+  };
 
-  // 기본 시간으로 부터 30분 후
-  const endTimezoneDate = new Date(new Date(startTimezoneDate).getTime() + 1_800_000);
-  const defaultEnd = endTimezoneDate.toISOString().slice(0, 10);
+  const getStartTimezoneTime = (startDate) => {
+    return getTimezoneTime(startDate).toISOString().slice(0, 10);
+  };
+
+  const getEndTimezoneTime = (startDate) => {
+    const endTimezoneDate = new Date(getTimezoneTime(startDate).getTime() + 1_800_000);
+    return endTimezoneDate.toISOString().slice(0, 10);
+  };
+
+  const getLocaleDateString = (time) => {
+    const value = new Date(time);
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1);
+    const date = String(value.getDate());
+    return `${year}-${month.padStart(2, '0')}-${date.padStart(2, '0')}`;
+  };
 
   const init = {
-    title: '',
-    startDate: defaultStart,
-    endDate: defaultEnd,
+    title: title || '',
+    startDate: getLocaleDateString(startDate),
+    endDate: getLocaleDateString(endDate),
   };
 
   const [inputData, setInputData] = useState(init);
@@ -143,14 +157,16 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
     startTime: {
       index: 0,
       time: '',
+      realTime: '',
     },
     endTime: {
       index: 0,
       time: '',
+      realTime: '',
     },
   });
 
-  const handleChangeSelectTime = (type, index, time) => {
+  const handleChangeSelectTime = (type, index, time, realTime) => {
     // 동기적으로 처리하려면 함수형으로 setter 함수를 실행
     // 단, 이때 인자로 값을 받음
     setSelectedTime((selectTime) => {
@@ -159,6 +175,7 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
         [type]: {
           index,
           time,
+          realTime,
         },
       };
     });
@@ -208,13 +225,11 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
       changeError('endTime');
       return;
     }
-
-    const getSelectedTime = (name) => selectedTime[name][1].slice(3);
-    const startDate = `${inputData.startDate} ${getSelectedTime('startTime')}`;
-    const endDate = `${inputData.endDate} ${getSelectedTime('endTime')}`;
+    const startDate = `${inputData.startDate} ${selectedTime['startTime'].realTime}`;
+    const endDate = `${inputData.endDate} ${selectedTime['endTime'].realTime}`;
 
     const isSameTime =
-      new Date(`${startDate}`).toISOString() === new Date(`${endDate}`).toISOString();
+      new Date(`${startDate}`)?.toISOString() === new Date(`${endDate}`)?.toISOString();
     if (isSameTime) {
       alert('시작 날짜/시간과 종료 날짜/시간이 같습니다.');
       return;
@@ -222,7 +237,8 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
 
     const startTimestamp = new Date(`${startDate}`).getTime();
     const endTimestamp = new Date(`${endDate}`).getTime();
-    if (startTimestamp - endTimestamp > 0) {
+
+    if (startTimestamp > endTimestamp) {
       alert('종료 날짜/시간이 시작 날짜/시간보다 이전입니다.');
       return;
     }
@@ -290,8 +306,8 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                   handleChangeSelectTime={handleChangeSelectTime}
                   selectedTime={selectedTime.startTime}
                   isError={isError.startTime}
-                  hour={hour}
-                  min={min}
+                  startDate={startDate}
+                  endDate={endDate}
                 />
               </dd>
             </StyledDivision>
@@ -318,8 +334,8 @@ const Modal = ({ open, handleClickOpenModal, modalKeyDate }) => {
                   handleChangeSelectTime={handleChangeSelectTime}
                   selectedTime={selectedTime.endTime}
                   isError={isError.endTime}
-                  hour={hour}
-                  min={min}
+                  startDate={startDate}
+                  endDate={endDate}
                 />
               </dd>
             </StyledDivision>

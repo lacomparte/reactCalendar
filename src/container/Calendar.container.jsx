@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { getLocalStorage } from '@/utils';
 import Modal from '@/components/common/modal/Modal';
@@ -17,23 +17,15 @@ const ContainerCalendar = () => {
   const [calendarType, setCalendarType] = useState('month');
   const [openModal, setOpenModal] = useState(false);
   const [viewCalendar, setViewCalendar] = useState(new Date());
-  const [modalKeyDate, setModalKeyDate] = useState({
-    date: new Date(),
-    hour: new Date().getHours(),
-    min: new Date().getMinutes(),
-  });
+  const [modalKeyDate, setModalKeyDate] = useState(new Date());
 
   const handleClickCalendarType = (type) => {
     setCalendarType(type);
   };
 
-  const handleClickOpenModal = (isOpen, date = '', hour = 0, min = 0) => {
-    setModalKeyDate({
-      date: date.toString(),
-      hour,
-      min,
-    });
-    setOpenModal(isOpen);
+  const handleClickOpenModal = (open, modalProps) => {
+    setModalKeyDate({ ...modalProps });
+    setOpenModal(open);
   };
 
   const handleChangeViewCalendar = (viewMonth) => {
@@ -60,7 +52,6 @@ const ContainerCalendar = () => {
       };
       return acc;
     }, []) || [];
-
   return (
     <StyledWrap>
       <CalendarType
@@ -87,7 +78,7 @@ const ContainerCalendar = () => {
         <Modal
           open={openModal}
           handleClickOpenModal={handleClickOpenModal}
-          modalKeyDate={modalKeyDate}
+          modalProps={modalKeyDate}
         />
       )}
     </StyledWrap>

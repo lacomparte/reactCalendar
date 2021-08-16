@@ -51,7 +51,14 @@ const StyledOptionButton = styled.button`
   background: white;
 `;
 
-const TimeSelectBox = ({ handleChangeSelectTime, selectedTime, isError, type, hour, min }) => {
+const TimeSelectBox = ({
+  handleChangeSelectTime,
+  selectedTime,
+  isError,
+  type,
+  startDate,
+  endDate,
+}) => {
   const times = Array.from({ length: 12 }, (_, i) => {
     const value = i === 0 ? ['12:00', '12:30'] : [`${i}:00`, `${i}:30`];
     return value;
@@ -62,21 +69,29 @@ const TimeSelectBox = ({ handleChangeSelectTime, selectedTime, isError, type, ho
   const timeTable = [...am, ...pm];
   const [isOpen, setIsOpen] = useState(false);
 
-  // NOTE 시작시간이 오후 11시면...?ㅠㅠ
+  const getRealTime = (item) => {
+    const index = timeTable.findIndex((time) => time === item);
+    const isHalf = index % 2 === 1;
+    return isHalf ? `${Math.floor(index / 2)}:30` : `${Math.floor(index / 2)}:00`;
+  };
+
   useEffect(() => {
+    const hour = endDate ? new Date(endDate).getHours() : new Date(startDate).getHours();
+    const min = endDate ? new Date(endDate).getMinutes() : new Date(startDate).getMinutes();
+
     const isHalfHour = min > 30 ? 1 : 0;
     const index =
       type === 'startTime' ? Number(hour) * 2 + isHalfHour : Number(hour) * 2 + isHalfHour + 1;
     const defaultTime = timeTable.find((item) => item === timeTable[index]);
-    handleChangeSelectTime(type, index, defaultTime);
-  }, [type, hour, min]);
+    handleChangeSelectTime(type, index, defaultTime, getRealTime(defaultTime));
+  }, [type, startDate, startDate]);
 
   const handleClickSelectBox = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleClickSelectOption = (type, index, time) => {
-    handleChangeSelectTime(type, index, time);
+  const handleClickSelectOption = (type, index, time, realTime) => {
+    handleChangeSelectTime(type, index, time, realTime);
     setIsOpen(!isOpen);
   };
 
@@ -94,7 +109,7 @@ const TimeSelectBox = ({ handleChangeSelectTime, selectedTime, isError, type, ho
               <StyledOptionButton
                 type="button"
                 isSelected={isSelected}
-                onClick={() => handleClickSelectOption(type, index, item)}
+                onClick={() => handleClickSelectOption(type, index, item, getRealTime(item))}
                 key={index}
               >
                 {item}

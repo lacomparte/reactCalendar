@@ -20,7 +20,7 @@ const CalendaMonth = ({
   }, [viewCalendar]);
 
   useEffect(() => {
-    setData(separateData[year][month]);
+    setData(separateData?.[year]?.[month]);
   }, [separateData, year, month]);
 
   const handleClickButton = (direction) => {

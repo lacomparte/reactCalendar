@@ -2,9 +2,9 @@
 export const getDate = (year, month, day = 1, hour = 0, min = 0) =>
   new Date(year, month - 1, day, hour, min);
 
-export const formattingDate = (date = new Date().toString()) => {
-  const convertToString = typeof date !== 'string' ? date.toString() : date;
-  return convertToString.slice(0, 15);
+export const formattingDate = (date) => {
+  const convertToString = typeof date !== 'string' ? date.toISOString() : date;
+  return convertToString.slice(0, 10);
 };
 
 export const getLocalStorage = (key) => JSON.parse(window.localStorage.getItem(key));

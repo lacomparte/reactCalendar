@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import CurrentDaySchedule from '@/components/month/CurrentDaySchedule';
 import { getDate, formattingDate } from '@/utils';
 
 const StyledCalendarList = styled.ol`
@@ -38,37 +39,9 @@ const StyledSchedule = styled.div`
   top: 30px;
   left: 3px;
   right: 3px;
-  bottom: 0;
-`;
-
-const StyledScheduledItemButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  border-radius: 3px;
-  color: white;
-  text-align: left;
-
-  &:: before {
-    flex: 0 0 4px;
-    width: 4px;
-    height: 4px;
-    border-radius: 100%;
-    margin: 0 5px;
-    background: ${({ itemColor }) => itemColor};
-    content: '';
-  }
-
-  & + p {
-    margin-top: 4px;
-  }
-`;
-
-const StyledScheduledBox = styled.p`
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-y: auto;
+  height: calc(100% - 30px);
 `;
 
 const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
@@ -132,40 +105,40 @@ const GenerateMonth = ({ year, month, handleClickOpenModal, data }) => {
    */
   const viewMonth = [...prevMonth, ...currentMonth, ...nextMonth];
 
-  const CurrentDaySchedule = (date) => {
-    if (!data) return;
-
-    const filtered = data.filter(
-      (item) => new Date(item.key).getDate() === new Date(date).getDate(),
-    );
-    const randomColor = '#' + Math.random().toString(16).substr(-6);
-
-    return filtered.map((item, idx) => {
-      return (
-        <StyledScheduledItemButton key={idx} itemColor={randomColor}>
-          <StyledScheduledBox>{item.title}</StyledScheduledBox>
-        </StyledScheduledItemButton>
-      );
-    });
-  };
-
   return (
     <>
       {isFetching && (
         <StyledCalendarList>
           {viewMonth.map(({ date, current }) => {
             const isToday = formattingDate(date) === now;
-            const hour = new Date(date).getHours();
-            const min = new Date(date).getMinutes();
-
+            const existData = data
+              ? data.reduce((acc, cur) => {
+                  if (new Date(date).toDateString() === new Date(cur.key).toDateString()) {
+                    acc.push(cur);
+                  }
+                  return acc;
+                }, [])
+              : [];
+            const modalProps = {
+              title: existData.title || '',
+              startDate: date,
+              endDate: date,
+            };
             return (
               <li key={date}>
-                <StyledButton onClick={() => handleClickOpenModal(true, date, hour, min)}>
+                <StyledButton onClick={() => handleClickOpenModal(true, modalProps)}>
                   <StyledDate isCurrent={current} isToday={isToday}>
-                    {new Date(date).getDate()}일
+                    {date.getDate()}일
                   </StyledDate>
                 </StyledButton>
-                <StyledSchedule>{CurrentDaySchedule(date)}</StyledSchedule>
+                {existData.length > 0 && (
+                  <StyledSchedule>
+                    <CurrentDaySchedule
+                      handleClickOpenModal={handleClickOpenModal}
+                      existData={existData}
+                    />
+                  </StyledSchedule>
+                )}
               </li>
             );
           })}

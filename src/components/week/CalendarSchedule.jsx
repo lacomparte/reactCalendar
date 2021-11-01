@@ -76,7 +76,7 @@ const StyledSchedule = styled.div`
 const CalendarSchedule = ({ weekCalendar, handleClickOpenModal, data }) => {
   const time24 = Array.from({ length: 24 }, (_, i) => i + 1);
   const time12 = Array.from({ length: 24 }, (_, i) => ((i + 11) % 12) + 1);
-  console.log(data);
+  // console.log(data);
 
   const generateDate = (date) => {
     const makeDate = Array.from({ length: 24 }, (_, i) => new Date(date).setHours(i, 0, 0, 0));
@@ -90,7 +90,7 @@ const CalendarSchedule = ({ weekCalendar, handleClickOpenModal, data }) => {
             startDate: date,
             endDate: date,
           };
-          console.log(existData);
+          // console.log(existData);
           return (
             <li aria-label={`${index} 시`} key={new Date(convertedDateFormat(date))}>
               <StyledButton

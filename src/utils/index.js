@@ -8,7 +8,7 @@ export const formattingDate = (date) => {
 };
 
 export const getCurrentData = (data, date) => {
-  console.log(data);
+  console.log(data, date);
   return data
     ? data.reduce((acc, cur) => {
         if (new Date(date).toDateString() === new Date(cur.key).toDateString()) {

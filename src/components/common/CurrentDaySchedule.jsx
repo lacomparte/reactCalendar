@@ -32,7 +32,7 @@ const StyledScheduledBox = styled.div`
 `;
 
 const CurrentDaySchedule = ({ existData, handleClickOpenModal, ...rest }) => {
-  console.log('existData', existData);
+  // console.log('existData', existData);
   const randomColor = '#' + Math.random().toString(16).substr(-6);
   const handleClickSchedule = (existData) => {
     handleClickOpenModal(true, existData);
